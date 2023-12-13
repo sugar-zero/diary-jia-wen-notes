@@ -4,21 +4,25 @@
       name="basic"
       :layout="formConfig.inline"
     >
-    <template v-for="(formIten,index) in formLabelData" :key="index">
+    <template v-for="(formItem,index) in formLabelData" :key="index">
       <a-form-item
-        v-model="formIten.model"
-        :label="formIten.label"
-        :name="formIten.model"
-        :rules="[{ required: true, message: '请输入'+ formIten.label }]"
+        v-model="formItem.model"
+        :label="formItem.label"
+        :name="formItem.model"
+        :rules="[{ required: true, message: '请输入'+ formItem.label }]"
       >
-        <a-input v-model:value="formData[formIten.model]" />
+        <a-input v-model:value="formData[formItem.model]" v-if="formItem.type != 'passwd'"/>
+        <a-input-password v-model:value="formData[formItem.model]" v-else/>
       </a-form-item>
     </template>
-    <template>
-        <a-form-item>
-            <a-button :type="formConfig.button.type ? 'primary': formConfig.button.type">{{formConfig.button.lable}}</a-button>
-        </a-form-item>
-    </template>
+    <!-- 按钮组 -->
+    <div :style="formConfig.buttonStyle">
+      <template v-for="(formConfigItem,index) in formConfig.button" :key="index">
+        <a-button :shape="formConfigItem.shape" danger :disabled="formConfigItem.disabled" v-if = "formConfigItem.type == 'danger'">{{formConfigItem.label}}</a-button>
+        <a-button :shape="formConfigItem.shape" ghost :disabled="formConfigItem.disabled" v-else-if = "formConfigItem.type == 'ghost'" >{{formConfigItem.label}}</a-button>
+        <a-button :shape="formConfigItem.shape" :disabled="formConfigItem.disabled" :type="formConfigItem.type ? formConfigItem.type : 'primary'" v-else>{{formConfigItem.label}}</a-button>
+      </template>
+    </div>
     </a-form>
   </template>
   <script lang="ts" setup>

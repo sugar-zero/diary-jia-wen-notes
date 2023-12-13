@@ -3,10 +3,17 @@ import loginForm from '@/components/componentsForm.vue'
 import { reactive, ref } from 'vue';
 const formConfig = ref({
   inline:"vertical",
-  button:{
+  button:[
+    {
     type:"primary",
-    
-  }
+    label:"登录"
+    },
+    {
+    type:"danger",
+    label:"取消",
+    },
+  ],
+  buttonStyle:"gap: 10px;display: flex;flex-direction: column;"
 })
 const formData = ref({
   username: "",
@@ -16,12 +23,11 @@ const formLabelData = reactive([
   {
   model:"username",
   label:"用户名",
-  icon:"<UserOutlined />",
   },
   {
   model:"passwd",
   label:"密码",
-  icon:"LockOutlined",
+  type:"passwd"
   },
 ])
 </script>
