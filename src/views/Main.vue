@@ -8,10 +8,11 @@ const siderStyle: CSSProperties = {
   backgroundColor: 'rgba(255,255,255,0)',
 };
 const contentStyle: CSSProperties = {
-  textAlign: 'center',
+  // textAlign: 'center',
   minHeight: 120,
   lineHeight: '120px',
   padding: "0 2rem",
+  paddingTop: "1rem"
 };
 </script>
 
