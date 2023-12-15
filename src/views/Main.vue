@@ -21,12 +21,9 @@ const contentStyle: CSSProperties = {
     <a-layout-sider :style="siderStyle"></a-layout-sider>
     <a-layout>
       <a-layout-content :style="contentStyle"><RouterView /></a-layout-content>
-      <a-layout-footer>Footer</a-layout-footer>
+      <!-- <a-layout-footer>Footer</a-layout-footer> -->
     </a-layout>
   </a-layout>
 </template>
 
-<style scoped>
-#app {
-}
-</style>
+<style scoped></style>

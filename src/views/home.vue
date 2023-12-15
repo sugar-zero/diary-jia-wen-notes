@@ -56,11 +56,11 @@ const postedMail = () => {
     v-for="(item, key) in data.postedList"
     :key="key"
   >
-    {{ item }}
+    <pre>{{ item }}</pre>
   </a-card>
 </template>
 
-<style>
+<style langer="less" scoped>
 #postedCard .ant-card-body {
   padding: 10px;
 }

@@ -1,12 +1,18 @@
 <script setup lang="ts">
-import { ref, computed } from "vue"
+import { ref, computed, getCurrentInstance, type ComponentInternalInstance } from "vue"
+const { proxy } = getCurrentInstance() as ComponentInternalInstance
+import { message } from "ant-design-vue"
 const formData = ref({
   username: "",
   passwd: "",
   remember: true
 })
-const onFinish = (value: Object) => {
-  console.log(value)
+const login = () => {
+  proxy
+    ?.$post("/login", { data: proxy?.$aes_encrypt(JSON.stringify(formData.value)) })
+    .then((res: any) => {})
+    message.success("登录成功")
+    proxy?.$router.push("/")
 }
 const disabled = computed(() => {
   return !(formData.value.username && formData.value.passwd)
@@ -14,7 +20,7 @@ const disabled = computed(() => {
 </script>
 
 <template>
-  <a-form :model="formData" layout="vertical" name="login" class="login-form" @finish="onFinish">
+  <a-form :model="formData" layout="vertical" name="login" class="login-form" @finish="login">
     <a-form-item
       label="用户名"
       name="username"
@@ -52,7 +58,7 @@ const disabled = computed(() => {
   </a-form>
 </template>
 
-<style scoped>
+<style scoped lang="less">
 @media (min-width: 1024px) {
   .login-form {
     width: 300px;

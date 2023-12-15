@@ -54,7 +54,7 @@ const { formData, formLabelData, formConfig } = defineProps([
   "formConfig"
 ])
 const proxy = getCurrentInstance() as ComponentInternalInstance
-const icons = getCurrentInstance()?.appContext.config.globalProperties.$icons
+const icons = proxy?.appContext.config.globalProperties.$icons
 const onFinish = (values: any) => {
   proxy.emit("edit", values)
 }
