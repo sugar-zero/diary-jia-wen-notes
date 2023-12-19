@@ -10,6 +10,8 @@ const service: AxiosInstance = axios.create({
 
 service.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
+    if (localStorage.getItem("token"))
+      config.headers.Authorization = `Bearer ${localStorage.getItem("token")}`
     return config
   },
   (error: any) => {
@@ -19,14 +21,16 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
   (response: AxiosResponse) => {
-    if (response.data.code === 200) {
-      return response.data.data
-    } else {
-      return Promise.reject(response.data.message)
-    }
+    return response
   },
   (error: any) => {
-    return Promise.reject(error)
+    // console.log(error)
+    // console.log(error.response)
+    // return Promise.reject(error).catch((error) => {
+    //   console.log(error)
+    //   return error.response
+    // })
+    return error.response
   }
 )
 

@@ -28,6 +28,7 @@ export async function get<T>(url: string, params?: any): Promise<APIResult<T>> {
  */
 export async function post<T>(url: string, data?: any): Promise<APIResult<T>> {
   const response = await service.post<APIResult<T>>(url, data)
+  // console.log(response)
   return response.data
 }
 

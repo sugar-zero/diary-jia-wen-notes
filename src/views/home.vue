@@ -51,6 +51,7 @@ const postedMail = () => {
     >
   </a-card>
   <a-card
+    hoverable
     size="small"
     style="width: 100%; margin-bottom: 5px"
     v-for="(item, key) in data.postedList"

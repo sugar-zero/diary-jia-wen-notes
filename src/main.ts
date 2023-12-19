@@ -14,11 +14,13 @@ import router from "./router"
 
 //路由拦截
 router.beforeEach((to, from, next) => {
-  let SSOAuth = localStorage.getItem("token")
-  // 只有生产环境才会强制登录
-  if (!SSOAuth && to.name !== "login" && import.meta.env.VITE_NODE_ENV === "production") {
+  let token = localStorage.getItem("token")
+  if (!token && to.name !== "login" && to.name !== "register") {
     router.push({ name: "login" })
+  } else if ((to.name == "login" || to.name == "register") && token) {
+    router.push({ name: "home" })
   } else {
+    // if (to.name == "register" && import.meta.env.VITE_ALLOW_REGISTER == "false") router.go(-1)
     next()
   }
 })
