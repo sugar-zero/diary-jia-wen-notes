@@ -3,9 +3,7 @@ import { ref, computed, getCurrentInstance, type ComponentInternalInstance } fro
 const { proxy } = getCurrentInstance() as ComponentInternalInstance
 import { message } from "ant-design-vue"
 
-const REGISTERStATUS = import.meta.env.VITE_ALLOW_REGISTER
-// console.log(REGISTERStATUS)
-
+const allowregister = JSON.parse(localStorage.getItem("systemConfig") as string).allowResgister
 const formData = ref({
   username: "",
   password: "",
@@ -21,7 +19,7 @@ const login = () => {
       if (res.code === 200) {
         disabledLogin.value = false
         message.success({ content: res.data.message, key: "login" })
-        localStorage.setItem("token", res.data.token)
+        localStorage.setItem("token", res.data.data.token)
         proxy?.$router.push({ name: "home" })
       }
       if (res.code === 400) {
@@ -68,7 +66,7 @@ const disabled = computed(() => {
       <a-button :disabled="disabled" type="primary" html-type="submit" class="login-form-button">
         登录
       </a-button>
-      <div v-if="REGISTERStATUS == 'true'">
+      <div v-if="allowregister">
         或者
         <a-button type="link" href="/register">现在注册！</a-button>
       </div>

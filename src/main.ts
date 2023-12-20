@@ -20,22 +20,27 @@ router.beforeEach((to, from, next) => {
   } else if ((to.name == "login" || to.name == "register") && token) {
     router.push({ name: "home" })
   } else {
-    // if (to.name == "register" && import.meta.env.VITE_ALLOW_REGISTER == "false") router.go(-1)
+    if (
+      to.name == "register" &&
+      !JSON.parse(localStorage.getItem("systemConfig") as string).allowResgister
+    )
+      router.push({ name: "home" })
     next()
   }
 })
 
 const app = createApp(App)
 
+app.config.globalProperties.$icons = Icons
+app.config.globalProperties.$aes_encrypt = AES_Encrypt
+app.config.globalProperties.$aes_decrypt = AES_Decrypt
+app.config.globalProperties.$message = message
+app.config.globalProperties.$get = get
+app.config.globalProperties.$post = post
+app.config.globalProperties.$put = put
+app.config.globalProperties.$del = del
+
 nextTick(() => {
-  app.config.globalProperties.$icons = Icons
-  app.config.globalProperties.$aes_encrypt = AES_Encrypt
-  app.config.globalProperties.$aes_decrypt = AES_Decrypt
-  app.config.globalProperties.$message = message
-  app.config.globalProperties.$get = get
-  app.config.globalProperties.$post = post
-  app.config.globalProperties.$put = put
-  app.config.globalProperties.$del = del
   for (const key in Icons) {
     // 把icons注册到全局
     app.component(key, Icons[key])
