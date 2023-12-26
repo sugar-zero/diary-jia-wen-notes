@@ -6,13 +6,19 @@
         v-model="formItem.model"
         :label="formItem.label"
         :name="formItem.model"
-        :rules="[{ required: true, message: '请输入' + formItem.label }]"
+        :rules="[{ required: formItem.required, message: '请输入' + formItem.label }]"
         v-if="!formItem.type"
       >
-        <a-input v-model:value="internalFormData[formItem.model]" v-if="formItem.type != 'passwd'"
+        <a-input
+          v-model:value="internalFormData[formItem.model]"
+          :placeholder="formItem.placeholder"
+          v-if="formItem.type != 'passwd'"
           ><template #prefix><component :is="icons[formItem.icon]" /></template
         ></a-input>
-        <a-input-password v-model:value="internalFormData[formItem.model]" v-else
+        <a-input-password
+          v-model:value="internalFormData[formItem.model]"
+          :placeholder="formItem.placeholder"
+          v-else
           ><template #prefix><component :is="icons[formItem.icon]" /></template
         ></a-input-password>
       </a-form-item>
@@ -21,7 +27,7 @@
         v-if="formItem.type == 'avatar'"
         :label="formItem.label"
         :name="formItem.model"
-        :rules="[{ required: true, message: '请输入' + formItem.label }]"
+        :rules="[{ required: formItem.required, message: '请输入' + formItem.label }]"
       >
         <a-avatar :src="internalFormData[formItem.model]" />
       </a-form-item>
@@ -30,15 +36,16 @@
         v-if="formItem.type == 'avatarUpload'"
         :label="formItem.label"
         :name="formItem.model"
-        :rules="[{ required: true, message: '请输入' + formItem.label }]"
+        :rules="[{ required: formItem.required, message: '请输入' + formItem.label }]"
       >
         <a-upload
           v-model="formItem.model"
-          name="file"
+          name="avatar"
           list-type="picture-card"
           class="avatar-uploader"
           :show-upload-list="false"
-          action="api/v1/upload/img"
+          action="api/v1/upload/avatar"
+          :headers="uploadHeaders"
           @change="handleChange"
         >
           <img
@@ -59,7 +66,7 @@
         v-if="formItem.type == 'img'"
         :label="formItem.label"
         :name="formItem.model"
-        :rules="[{ required: true, message: '请输入' + formItem.label }]"
+        :rules="[{ required: formItem.required, message: '请输入' + formItem.label }]"
       >
         <a-upload
           v-model="formItem.model"
@@ -67,8 +74,9 @@
           list-type="picture-card"
           class="avatar-uploader"
           :show-upload-list="false"
+          :headers="uploadHeaders"
           action="api/v1/upload/img"
-          @change="handleChange"
+          @change="handleChangeUserBg"
         >
           <img
             v-if="internalFormData[formItem.model]"
@@ -126,7 +134,7 @@
   </a-form>
 </template>
 <script lang="ts" setup>
-import { defineProps, getCurrentInstance, type ComponentInternalInstance,ref } from "vue"
+import { defineProps, getCurrentInstance, type ComponentInternalInstance, ref } from "vue"
 import type { UploadChangeParam } from "ant-design-vue"
 const { formData, formLabelData, formConfig } = defineProps([
   "formData",
@@ -142,8 +150,16 @@ const onFinish = (values: any) => {
 
 const handleChange = (info: UploadChangeParam) => {
   if (info.file.status === "done") {
-    internalFormData.value.avatar = "http://localhost:3000/static/" + info.file.response.data.data
-    internalFormData.value.userBg = "http://localhost:3000/static/" + info.file.response.data.data
+    internalFormData.value.avatar = info.file.response.data.data
   }
+}
+const handleChangeUserBg = (info: UploadChangeParam) => {
+  if (info.file.status === "done") {
+    internalFormData.value.userBg = info.file.response.data.data
+  }
+}
+// 上传附带的token
+const uploadHeaders = {
+  authorization: "Bearer " + localStorage.getItem("token")
 }
 </script>

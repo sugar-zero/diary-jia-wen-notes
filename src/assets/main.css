@@ -16,7 +16,7 @@
 } */
 
 body {
-  background-color: #f4f4f5;
+  background-color:rgba(245,245,245);
 }
 
 /* @media (hover: hover) {
@@ -38,7 +38,7 @@ body {
   }
 } */
 @media only screen and (min-width: 860px) {
-  #app{
+  #app {
     padding: 0 2rem;
   }
 }

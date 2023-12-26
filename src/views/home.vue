@@ -1,33 +1,65 @@
 <script setup lang="ts">
-import { ref, h, reactive } from "vue"
+import { ref, h, reactive, getCurrentInstance, type ComponentInternalInstance } from "vue"
 import { SendOutlined, EditOutlined } from "@ant-design/icons-vue"
-import { message, type UploadProps } from "ant-design-vue"
+import { type UploadProps, type UploadChangeParam } from "ant-design-vue"
+const { proxy } = getCurrentInstance() as ComponentInternalInstance
 
 interface Data {
   content: String
-  postedList: String[]
+  contentFileList: {}[]
+  postedList: {
+    content: string
+    id: number
+    create_time: string
+    author: string
+    filesList: []
+  }[]
+  imagegroup: {}[]
 }
-;[]
 
 const data = reactive<Data>({
   content: "",
-  postedList: []
+  contentFileList: [],
+  postedList: [],
+  imagegroup: []
 })
 
 let postedMailLoading = ref(false)
 
+//发表日记
 const postedMail = () => {
   postedMailLoading.value = true
 
-  setTimeout(() => {
-    postedMailLoading.value = false
-    // console.log(data.content)
-    data.postedList.push(data.content)
-    message.success("📝记录完成！")
-    data.content = ""
-    // console.log(data.postedList)
-  }, 1000)
+  proxy
+    ?.$post("/diary/record", {
+      content: data.content,
+      files: data.contentFileList
+    })
+    .then((res: any) => {
+      if (res.code == 200) {
+        proxy?.$message.success(res.data.message)
+        data.content = ""
+        data.contentFileList = []
+        fileList.value = []
+        data.postedList = res.data.data
+        postedMailLoading.value = false
+      } else {
+        proxy?.$message.error(res.message)
+        postedMailLoading.value = false
+      }
+    })
 }
+
+//获取全部日记列表
+const getMail = () => {
+  proxy?.$get("/diary/record").then((res: any) => {
+    if (res.code == 200) {
+      data.postedList = res.data
+    }
+  })
+}
+getMail()
+
 //上传文件列表
 const fileList = ref<UploadProps["fileList"]>([])
 const previewImage = ref("")
@@ -53,6 +85,21 @@ const handlePreview = async (file: UploadProps["fileList"][number]) => {
 const handleCancel = () => {
   previewVisible.value = false
 }
+
+const handleChange = (info: UploadChangeParam) => {
+  if (info.file.status === "done") {
+    data.contentFileList.push(info.file.response.data.data)
+  } else {
+    if (info.file.status === "error") {
+      proxy?.$message.error(info.file.response.message)
+    }
+  }
+}
+const uploadHeaders = {
+  authorization: "Bearer " + localStorage.getItem("token")
+}
+//引入404图
+import error_image from "@/assets/404.jpg"
 </script>
 
 <template>
@@ -65,15 +112,19 @@ const handleCancel = () => {
     />
     <a-divider />
     <a-upload
-      disabled
+      name="diary"
+      action="api/v1/upload/diary-image"
+      :headers="uploadHeaders"
       v-model:file-list="fileList"
-      action="/api/v1/upload/img"
       list-type="picture-card"
       @preview="handlePreview"
+      :multiple="true"
+      accept="image/*"
+      @change="handleChange"
     >
-      <div v-if="fileList.length < 9">
+      <div v-if="fileList && fileList.length < 9">
         <plus-outlined />
-        <div style="margin-top: 8px">未完善文件上传</div>
+        <div style="margin-top: 8px">上传图片</div>
       </div>
     </a-upload>
     <a-modal :open="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
@@ -86,18 +137,43 @@ const handleCancel = () => {
       type="primary"
       @click="postedMail"
       :loading="postedMailLoading"
-      :disabled="!data.content"
-      >{{ data.content ? "记录下来" : "先写点什么吧" }}</a-button
+      :disabled="(fileList && fileList.length > 0) || data.content ? false : true"
+      >{{
+        (fileList && fileList.length > 0) || data.content ? "记录下来" : "先写点什么吧"
+      }}</a-button
     >
   </a-card>
   <a-card
-    hoverable
     size="small"
     style="width: 100%; margin-bottom: 5px"
     v-for="(item, key) in data.postedList"
     :key="key"
   >
-    <pre>{{ item }}</pre>
+    <div class="upperArea">
+      #{{ item.id }} @{{ item.author }} 发布于
+      {{
+        new Date(item.create_time).toLocaleString(undefined, {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false
+        })
+      }}
+    </div>
+    <div class="centralArea">
+      <pre v-html="item.content"></pre>
+    </div>
+    <a-image-preview-group>
+      <a-row :gutter="[4, 8]">
+        <a-col :span="8" :key="key" v-for="(file, key) in item.filesList">
+          <a-image :src="file" :height="100" :width="100" :fallback="error_image" />
+        </a-col>
+      </a-row>
+    </a-image-preview-group>
+    <div class="lowerArea">预留功能</div>
   </a-card>
 </template>
 
@@ -107,5 +183,15 @@ const handleCancel = () => {
 }
 .anticon-send {
   transform: rotate(-45deg);
+}
+.upperArea {
+  color: rgba(0, 0, 0, 0.5);
+  margin-bottom: 1em;
+}
+.centralArea {
+}
+.lowerArea {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.5);
 }
 </style>

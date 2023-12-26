@@ -1,5 +1,7 @@
 import axios from "axios"
 import type { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from "axios"
+import { message } from "ant-design-vue"
+import router from "../router"
 
 const apiUrl = import.meta.env.VITE_BASE_API
 
@@ -30,6 +32,11 @@ service.interceptors.response.use(
     //   console.log(error)
     //   return error.response
     // })
+    if (error.response.status === 401) {
+      localStorage.removeItem("token")
+      message.error(error.response.data.message)
+      router.push({ name: "login" })
+    }
     return error.response
   }
 )

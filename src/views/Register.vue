@@ -15,14 +15,18 @@ const registerformData = ref({
 const register = () => {
   message.loading({ content: "注册中...", key: "register" })
   proxy
-    ?.$post("/user/reg", { data: proxy?.$aes_encrypt(JSON.stringify(registerformData.value)) })
+    ?.$post("/user/reg", { secret: proxy?.$aes_encrypt(JSON.stringify(registerformData.value)) })
     .then((res: any) => {
       if (res.code === 200) {
         message.success({ content: res.data.message, key: "register" })
         localStorage.setItem("token", res.data.data.token)
         proxy.$router.push({ name: "home" })
       } else {
-        message.error({ content: res.message, key: "register" })
+        if (Array.isArray(res.data)) {
+          message.error({ content: res.data.join("，"), key: "register" })
+        } else {
+          message.error({ content: res.message, key: "register" })
+        }
       }
     })
 }

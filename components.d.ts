@@ -7,17 +7,19 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    AAffix: typeof import('ant-design-vue/es')['Affix']
     AAutoComplete: typeof import('ant-design-vue/es')['AutoComplete']
     AAvatar: typeof import('ant-design-vue/es')['Avatar']
     AButton: typeof import('ant-design-vue/es')['Button']
     ACard: typeof import('ant-design-vue/es')['Card']
     ACardMeta: typeof import('ant-design-vue/es')['CardMeta']
     ACheckbox: typeof import('ant-design-vue/es')['Checkbox']
+    ACol: typeof import('ant-design-vue/es')['Col']
     ADivider: typeof import('ant-design-vue/es')['Divider']
     ADrawer: typeof import('ant-design-vue/es')['Drawer']
     AForm: typeof import('ant-design-vue/es')['Form']
     AFormItem: typeof import('ant-design-vue/es')['FormItem']
+    AImage: typeof import('ant-design-vue/es')['Image']
+    AImagePreviewGroup: typeof import('ant-design-vue/es')['ImagePreviewGroup']
     AInput: typeof import('ant-design-vue/es')['Input']
     AInputPassword: typeof import('ant-design-vue/es')['InputPassword']
     ALayout: typeof import('ant-design-vue/es')['Layout']
@@ -30,16 +32,13 @@ declare module 'vue' {
     AListItemMeta: typeof import('ant-design-vue/es')['ListItemMeta']
     AModal: typeof import('ant-design-vue/es')['Modal']
     APopconfirm: typeof import('ant-design-vue/es')['Popconfirm']
-    ARadioGroup: typeof import('ant-design-vue/es')['RadioGroup']
-    ASpace: typeof import('ant-design-vue/es')['Space']
+    ARow: typeof import('ant-design-vue/es')['Row']
     ATextarea: typeof import('ant-design-vue/es')['Textarea']
     AUpload: typeof import('ant-design-vue/es')['Upload']
-    ComponentsAside: typeof import('./src/components/componentsAside.vue')['default']
     ComponentsForm: typeof import('./src/components/componentsForm.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    User: typeof import('./src/components/User.vue')['default']
     UserInfoCard: typeof import('./src/components/userInfoCard.vue')['default']
   }
 }

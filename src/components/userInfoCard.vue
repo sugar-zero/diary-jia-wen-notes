@@ -19,12 +19,14 @@ const logout = () => {
 }
 interface userInfo {
   nickname: string
+  username: string
   signature: string
   avatar: string
   userBg: string
 }
 let userInfo = reactive<userInfo>({
   nickname: "",
+  username: "",
   signature: "",
   avatar: "",
   userBg: ""
@@ -41,7 +43,8 @@ let userInfoArray = ref([
 const userInfoLableForm = ref([
   {
     model: "nickname",
-    label: "昵称"
+    label: "昵称",
+    placeholder: "昵称为空将显示用户名"
   },
   {
     model: "signature",
@@ -69,11 +72,9 @@ const formConfig = ref({
 // let tryCount: number = 0
 const getUserInfo = () => {
   proxy?.$get("/user/info").then((res: any) => {
-    if (res.code !== 200) {
-      proxy?.$message.error(res.message)
-      logout()
-    } else {
+    if (res.code == 200) {
       userInfo.nickname = res.data.data.nickname
+      userInfo.username = res.data.data.username
       userInfo.signature = res.data.data.signature
       userInfo.avatar = res.data.data.avatar
       userInfo.userBg = res.data.data.userBg
@@ -88,11 +89,10 @@ const EditUserInfoModal = () => {
 }
 const updateUserInfo = (row: any) => {
   proxy?.$put("/user/info", row).then((res: any) => {
-    if (res.code !== 200) {
-      proxy?.$message.error(res.message)
-    } else {
+    if (res.code == 200) {
       proxy?.$message.success("修改成功")
       userInfo.nickname = res.data.data.nickname
+      userInfo.username = res.data.data.username
       userInfo.signature = res.data.data.signature
       userInfo.avatar = res.data.data.avatar
       userInfo.userBg = res.data.data.userBg
@@ -103,7 +103,7 @@ const updateUserInfo = (row: any) => {
 </script>
 <template>
   <a-card style="width: 100%" v-if="screenStatus == 'pc'">
-    <template #cover>
+    <template #cover v-if="userInfo.userBg">
       <img alt="example" :src="userInfo.userBg" />
     </template>
     <template #actions>
@@ -119,24 +119,42 @@ const updateUserInfo = (row: any) => {
         <logout-outlined key="ellipsis" />
       </a-popconfirm>
     </template>
-    <a-card-meta :title="userInfo.nickname" :description="userInfo.signature">
+    <a-card-meta
+      :title="userInfo.nickname ? userInfo.nickname : userInfo.username"
+      :description="userInfo.signature"
+    >
       <template #avatar>
-        <a-avatar :src="userInfo.avatar" />
+        <a-avatar
+          v-if="userInfo.avatar"
+          :src="userInfo.avatar"
+          :size="{ xs: 24, sm: 32, md: 40, lg: 40, xl: 40, xxl: 40 }"
+        />
+        <a-avatar v-else :size="{ xs: 24, sm: 32, md: 40, lg: 40, xl: 40, xxl: 40 }">{{
+          userInfo.nickname.slice(0, 1)
+        }}</a-avatar>
       </template>
     </a-card-meta>
   </a-card>
   <!-- 手机端显示 -->
   <div v-else>
-    <img alt="用户背景" :src="userInfo.userBg" style="width: 100%; position: relative; top: 0" />
+    <img
+      alt="用户背景"
+      :src="userInfo.userBg"
+      style="width: 100%; position: relative; top: 0"
+      v-if="userInfo.userBg"
+    />
     <a-list item-layout="horizontal" :data-source="userInfoArray">
       <template #renderItem="{ item }">
         <a-list-item>
           <a-list-item-meta :description="item.signature">
             <template #title>
-              <span>{{ item.nickname }}</span>
+              <span>{{ userInfo.nickname ? userInfo.nickname : userInfo.username }}</span>
             </template>
             <template #avatar>
-              <a-avatar :src="item.avatar" />
+              <a-avatar v-if="item.avatar" :src="item.avatar" :size="{ xs: 40, sm: 50, md: 60 }" />
+              <a-avatar v-else :size="{ xs: 40, sm: 50, md: 60 }">{{
+                item.nickname.slice(0, 1)
+              }}</a-avatar>
             </template>
           </a-list-item-meta>
         </a-list-item>
@@ -149,6 +167,15 @@ const updateUserInfo = (row: any) => {
       @click="EditUserInfoModal"
       >修改个人信息</a-button
     >
+    <a-popconfirm
+      placement="bottomRight"
+      title="是否要退出登录？"
+      ok-text="是的"
+      cancel-text="不了"
+      @confirm="logout"
+    >
+      <a-button :icon="h(LogoutOutlined)" style="margin-left: 10px" type="text">退出登录</a-button>
+    </a-popconfirm>
   </div>
   <a-modal
     v-model:open="showEditUserInfoModal"

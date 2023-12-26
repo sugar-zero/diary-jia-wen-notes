@@ -1,6 +1,5 @@
 import "./assets/main.css"
-import { createApp } from "vue"
-import { nextTick } from "@vue/runtime-core"
+import { createApp, nextTick } from "vue"
 import { message } from "ant-design-vue"
 import "ant-design-vue/dist/reset.css"
 import { createPinia } from "pinia"
@@ -32,6 +31,7 @@ router.beforeEach((to, from, next) => {
 const app = createApp(App)
 
 app.config.globalProperties.$icons = Icons
+app.config.globalProperties.$aes_decrypt = AES_Encrypt
 app.config.globalProperties.$aes_encrypt = AES_Encrypt
 app.config.globalProperties.$aes_decrypt = AES_Decrypt
 app.config.globalProperties.$message = message
@@ -43,6 +43,7 @@ app.config.globalProperties.$del = del
 nextTick(() => {
   for (const key in Icons) {
     // 把icons注册到全局
+    // @ts-ignore
     app.component(key, Icons[key])
   }
 })

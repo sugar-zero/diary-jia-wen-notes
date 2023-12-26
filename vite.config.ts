@@ -8,6 +8,10 @@ import vueJsx from "@vitejs/plugin-vue-jsx"
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: "./",
+  build: {
+    target: ["ios11"]
+  },
   plugins: [
     vue(),
     vueJsx(),

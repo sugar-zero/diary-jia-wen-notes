@@ -7,14 +7,14 @@ const allowregister = JSON.parse(localStorage.getItem("systemConfig") as string)
 const formData = ref({
   username: "",
   password: "",
-  remember: true
+  remember: false
 })
 const disabledLogin = ref(false)
 const login = () => {
   message.loading({ content: "登录中...", key: "login" })
   disabledLogin.value = true
   proxy
-    ?.$post("/user/login", { data: proxy?.$aes_encrypt(JSON.stringify(formData.value)) })
+    ?.$post("/user/login", { secret: proxy?.$aes_encrypt(JSON.stringify(formData.value)) })
     .then((res: any) => {
       if (res.code === 200) {
         disabledLogin.value = false
@@ -58,7 +58,7 @@ const disabled = computed(() => {
     <a-form-item>
       <a-form-item name="remember" no-style>
         <a-checkbox v-model:checked="formData.remember">记住我</a-checkbox>
-        <a-button class="login-form-forgot" type="link">忘记密码</a-button>
+        <a-button class="login-form-forgot" type="link">忘记密码(还没做)</a-button>
       </a-form-item>
     </a-form-item>
 
@@ -75,17 +75,16 @@ const disabled = computed(() => {
 </template>
 
 <style scoped lang="less">
-@media (min-width: 1024px) {
-  .login-form {
-    width: 300px;
-  }
-}
 .login-form {
   position: relative;
   display: flex;
-  justify-content: center;
-  /* align-items: center; */
   min-height: 100vh;
+  left: 0;
+  right: 0;
+  margin: auto;
+  min-width: 300px;
+  padding: 0 1rem;
+  justify-content: center;
   flex-direction: column;
 }
 .login-form-forgot {
@@ -93,5 +92,33 @@ const disabled = computed(() => {
 }
 .login-form-button {
   width: 100%;
+}
+@media only screen and (max-width: 860px) {
+  .login-form {
+    position: relative;
+    display: flex;
+    min-height: 100vh;
+    left: 0;
+    right: 0;
+    margin: auto;
+    min-width: 300px;
+    padding: 0 1rem;
+    justify-content: center;
+    flex-direction: column;
+  }
+}
+@media only screen and (min-width: 1600px) {
+  .login-form {
+    position: relative;
+    display: flex;
+    min-height: 100vh;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 80%;
+    padding: 0 1rem;
+    justify-content: center;
+    flex-direction: column;
+  }
 }
 </style>

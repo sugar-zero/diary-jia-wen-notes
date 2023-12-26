@@ -26,8 +26,8 @@ export async function get<T>(url: string, params?: any): Promise<APIResult<T>> {
  * @param params - 请求的参数
  * @returns APIResult<T>类型的Promise对象，包含响应的数据
  */
-export async function post<T>(url: string, data?: any): Promise<APIResult<T>> {
-  const response = await service.post<APIResult<T>>(url, data)
+export async function post<T>(url: string, data?: any, config?: object): Promise<APIResult<T>> {
+  const response = await service.post<APIResult<T>>(url, data, config)
   // console.log(response)
   return response.data
 }
@@ -38,8 +38,8 @@ export async function post<T>(url: string, data?: any): Promise<APIResult<T>> {
  * @param params 请求的参数
  * @returns Promise 返回 API 结果及数据
  */
-export async function put<T>(url: string, data?: any): Promise<APIResult<T>> {
-  const response = await service.put<APIResult<T>>(url, data)
+export async function put<T>(url: string, data?: any, config?: object): Promise<APIResult<T>> {
+  const response = await service.put<APIResult<T>>(url, data, config)
   return response.data
 }
 

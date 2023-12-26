@@ -2,15 +2,15 @@ import { ComponentCustomProperties } from "@vue/runtime-core"
 
 declare module "@vue/runtime-core" {
   interface ComponentCustomProperties {
-    $get: proxy
-    $post: proxy
-    $put: proxy
-    $del: proxy
-    $message: proxy
-    $loading: proxy
-    $notify: proxy
-    $aes_encrypt: proxy
-    $aes_decrypt: proxy
+    $get: Proxy
+    $post: Proxy
+    $put: Proxy
+    $del: Proxy
+    $message: Proxy
+    $loading: Proxy
+    $notify: Proxy
+    $aes_encrypt: Proxy
+    $aes_decrypt: Proxy
   }
 }
 
