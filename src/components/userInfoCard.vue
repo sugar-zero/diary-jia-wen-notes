@@ -1,16 +1,10 @@
 <script lang="ts" setup>
 import { EditOutlined, LogoutOutlined } from "@ant-design/icons-vue"
-import {
-  getCurrentInstance,
-  type ComponentInternalInstance,
-  reactive,
-  ref,
-  defineProps,
-  h
-} from "vue"
+import { getCurrentInstance, reactive, ref, h } from "vue"
 import componentsForm from "./componentsForm.vue"
 import router from "../router"
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+// @ts-ignore
+const { proxy } = getCurrentInstance()
 const { screenStatus } = defineProps(["screenStatus"])
 const logout = () => {
   localStorage.removeItem("token")
@@ -140,7 +134,14 @@ const updateUserInfo = (row: any) => {
     <img
       alt="用户背景"
       :src="userInfo.userBg"
-      style="width: 100%; position: relative; top: 0"
+      style="
+        width: 100%;
+        max-height: 200px;
+        object-fit: cover;
+        position: relative;
+        top: 0;
+        height: 50%;
+      "
       v-if="userInfo.userBg"
     />
     <a-list item-layout="horizontal" :data-source="userInfoArray">

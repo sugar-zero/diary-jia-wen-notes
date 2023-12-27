@@ -39,11 +39,10 @@
         :rules="[{ required: formItem.required, message: '请输入' + formItem.label }]"
       >
         <a-upload
-          v-model="formItem.model"
+          v-model:file-list="formItem.model"
           name="avatar"
           list-type="picture-card"
           class="avatar-uploader"
-          :show-upload-list="false"
           action="api/v1/upload/avatar"
           :headers="uploadHeaders"
           @change="handleChange"
@@ -52,7 +51,7 @@
             v-if="internalFormData[formItem.model]"
             :src="internalFormData[formItem.model]"
             alt="avatar"
-            style="width: 90%"
+            style="width: 90%; height: 90%; object-fit: cover"
           />
           <div v-else>
             <loading-outlined v-if="false"></loading-outlined>
@@ -73,7 +72,6 @@
           name="file"
           list-type="picture-card"
           class="avatar-uploader"
-          :show-upload-list="false"
           :headers="uploadHeaders"
           action="api/v1/upload/img"
           @change="handleChangeUserBg"
@@ -81,7 +79,7 @@
           <img
             v-if="internalFormData[formItem.model]"
             :src="internalFormData[formItem.model]"
-            style="width: 100%"
+            style="width: 90%; height: 90%; object-fit: cover"
           />
           <div v-else>
             <loading-outlined v-if="false"></loading-outlined>
@@ -134,7 +132,7 @@
   </a-form>
 </template>
 <script lang="ts" setup>
-import { defineProps, getCurrentInstance, type ComponentInternalInstance, ref } from "vue"
+import { getCurrentInstance, type ComponentInternalInstance, ref } from "vue"
 import type { UploadChangeParam } from "ant-design-vue"
 const { formData, formLabelData, formConfig } = defineProps([
   "formData",

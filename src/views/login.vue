@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, getCurrentInstance, type ComponentInternalInstance } from "vue"
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+import { ref, computed, getCurrentInstance } from "vue"
+//@ts-ignore
+const { proxy } = getCurrentInstance()
 import { message } from "ant-design-vue"
 
 const allowregister = JSON.parse(localStorage.getItem("systemConfig") as string).allowResgister

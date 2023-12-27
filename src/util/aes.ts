@@ -8,7 +8,7 @@ const IV = CryptoJS.enc.Utf8.parse("31940121824")
  * @param {string} text - 需要加密的文本
  * @returns {string} - 返回加密后的密文
  */
-export function AES_Encrypt(text: string): string {
+export function aes_encrypt(text: string): string {
   const encrypted = CryptoJS.AES.encrypt(text, KEY, {
     iv: IV,
     mode: CryptoJS.mode.CTR,
@@ -23,7 +23,7 @@ export function AES_Encrypt(text: string): string {
  * @param {string} ciphertext - 密文
  * @returns {string} - 解密后的明文
  */
-export function AES_Decrypt(ciphertext: string): string {
+export function aes_decrypt(ciphertext: string): string {
   const bytes = CryptoJS.AES.decrypt(ciphertext, KEY, {
     iv: IV,
     mode: CryptoJS.mode.CTR,

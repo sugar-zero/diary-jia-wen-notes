@@ -3,8 +3,8 @@ import { createApp, nextTick } from "vue"
 import { message } from "ant-design-vue"
 import "ant-design-vue/dist/reset.css"
 import { createPinia } from "pinia"
-import { get, post, put, del } from "@/api/api"
-import { AES_Encrypt, AES_Decrypt } from "@/util/aes"
+import { get, post, put, del, patch } from "@/api/api"
+import { aes_encrypt, aes_decrypt } from "@/util/aes"
 // 引入icon
 import * as Icons from "@ant-design/icons-vue"
 
@@ -31,14 +31,14 @@ router.beforeEach((to, from, next) => {
 const app = createApp(App)
 
 app.config.globalProperties.$icons = Icons
-app.config.globalProperties.$aes_decrypt = AES_Encrypt
-app.config.globalProperties.$aes_encrypt = AES_Encrypt
-app.config.globalProperties.$aes_decrypt = AES_Decrypt
+app.config.globalProperties.$aes_decrypt = aes_decrypt
+app.config.globalProperties.$aes_encrypt = aes_encrypt
 app.config.globalProperties.$message = message
 app.config.globalProperties.$get = get
 app.config.globalProperties.$post = post
 app.config.globalProperties.$put = put
 app.config.globalProperties.$del = del
+app.config.globalProperties.$patch = patch
 
 nextTick(() => {
   for (const key in Icons) {

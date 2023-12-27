@@ -34,6 +34,7 @@ declare module 'vue' {
     APopconfirm: typeof import('ant-design-vue/es')['Popconfirm']
     ARow: typeof import('ant-design-vue/es')['Row']
     ATextarea: typeof import('ant-design-vue/es')['Textarea']
+    ATypography: typeof import('ant-design-vue/es')['Typography']
     AUpload: typeof import('ant-design-vue/es')['Upload']
     ComponentsForm: typeof import('./src/components/componentsForm.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']

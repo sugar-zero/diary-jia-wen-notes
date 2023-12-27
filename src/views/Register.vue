@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, getCurrentInstance, type ComponentInternalInstance } from "vue"
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+import { ref, getCurrentInstance } from "vue"
+//@ts-ignore
+const { proxy } = getCurrentInstance()
 import { type Rule } from "ant-design-vue/es/form"
 import { message } from "ant-design-vue"
 
