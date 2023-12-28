@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, getCurrentInstance } from "vue"
+import { userStore } from "@/stores/main"
 //@ts-ignore
 const { proxy } = getCurrentInstance()
 import { message } from "ant-design-vue"
@@ -21,7 +22,10 @@ const login = () => {
         disabledLogin.value = false
         message.success({ content: res.data.message, key: "login" })
         localStorage.setItem("token", res.data.data.token)
+        localStorage.setItem("user", res.data.data.userInfo)
         proxy?.$router.push({ name: "home" })
+        const useUserStore = userStore()
+        useUserStore.login(res.data.data.userInfo)
       }
       if (res.code === 400) {
         disabledLogin.value = false

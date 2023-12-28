@@ -1,13 +1,15 @@
 <script lang="ts" setup>
-import { EditOutlined, LogoutOutlined } from "@ant-design/icons-vue"
+import { EditOutlined, LogoutOutlined, SyncOutlined } from "@ant-design/icons-vue"
 import { getCurrentInstance, reactive, ref, h } from "vue"
 import componentsForm from "./componentsForm.vue"
 import router from "../router"
+import { userStore } from "@/stores/main"
 // @ts-ignore
 const { proxy } = getCurrentInstance()
 const { screenStatus } = defineProps(["screenStatus"])
 const logout = () => {
-  localStorage.removeItem("token")
+  const useUserStore = userStore()
+  useUserStore.logout()
   proxy?.$message.success("已出退登录")
   router.push({ name: "login" })
 }
@@ -94,6 +96,11 @@ const updateUserInfo = (row: any) => {
     }
   })
 }
+//获取父组件转发的日记刷新方法
+const emits = defineEmits(["refreshMailList"])
+const refreshMailList = () => {
+  emits("refreshMailList")
+}
 </script>
 <template>
   <a-card style="width: 100%" v-if="screenStatus == 'pc'">
@@ -101,8 +108,8 @@ const updateUserInfo = (row: any) => {
       <img alt="example" :src="userInfo.userBg" />
     </template>
     <template #actions>
-      <!-- <setting-outlined key="setting" /> -->
       <edit-outlined key="edit" @click="EditUserInfoModal" />
+      <sync-outlined @click="refreshMailList" />
       <a-popconfirm
         placement="bottomRight"
         title="是否要退出登录？"
