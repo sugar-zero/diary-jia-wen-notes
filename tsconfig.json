@@ -11,5 +11,5 @@
       "path": "./tsconfig.vitest.json"
     }
   ],
-  
+  // "include": ["env.d.ts","src/**/*.ts","src/**/*.d.ts","src/**/*.vue"]//算了，不折腾了，可能是ts的版本兼容性问题把
 }

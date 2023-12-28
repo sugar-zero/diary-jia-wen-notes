@@ -34,6 +34,7 @@ service.interceptors.response.use(
     // })
     if (error.response.status === 401) {
       localStorage.removeItem("token")
+      localStorage.removeItem("user")
       message.error(error.response.data.message)
       router.push({ name: "login" })
     }
