@@ -1,15 +1,10 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router"
-import {
-  ref,
-  type CSSProperties,
-  onMounted,
-  getCurrentInstance,
-  type ComponentInternalInstance
-} from "vue"
+import { ref, type CSSProperties, onMounted, getCurrentInstance } from "vue"
 import userInfoCard from "@/components/userInfoCard.vue"
+import Home from "@/views/Home.vue"
 const filings = JSON.parse(localStorage.getItem("systemConfig") as string).filings
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy }: any = getCurrentInstance()
 const screenWidth = ref(0)
 const drawer = ref(null)
 const siderDrawerOpened = ref(false)
@@ -65,13 +60,23 @@ onMounted(() => {
 const siderDrawerSwitch = () => {
   siderDrawerOpened.value = !siderDrawerOpened.value
 }
+//刷新子组件提供的获取日记方法
+const home: any = ref(null)
+const refreshMailList = () => {
+  home.value.getMail()
+  proxy?.$message.success("刷新成功")
+}
 </script>
 <template>
   <a-layout-header v-if="screenWidth < 860" :style="headerStyle">
     <a-button type="primary" style="margin-bottom: 16px" @click="siderDrawerSwitch">
       <MenuUnfoldOutlined v-if="!siderDrawerOpened" />
-      <MenuFoldOutlined v-else /> </a-button
-  ></a-layout-header>
+      <MenuFoldOutlined v-else />
+    </a-button>
+    <a-button style="margin-left: 10px" @click="refreshMailList"
+      ><sync-outlined spin />刷新日记</a-button
+    >
+  </a-layout-header>
   <a-layout>
     <a-drawer
       ref="drawer"
@@ -88,10 +93,12 @@ const siderDrawerSwitch = () => {
         ><userInfoCard
       /></a-layout-sider>
     </a-drawer>
-    <a-layout-sider :style="siderStyle" v-else
-      ><userInfoCard :screenStatus="'pc'"
+    <a-layout-sider :style="siderStyle" v-else :width="260"
+      ><userInfoCard :screenStatus="'pc'" @refreshMailList="refreshMailList"
     /></a-layout-sider>
-    <a-layout-content :style="contentStyle"><RouterView /></a-layout-content>
+    <a-layout-content :style="contentStyle">
+      <RouterView> <Home ref="home"></Home> </RouterView
+    ></a-layout-content>
   </a-layout>
   <a-layout-footer :style="footerStyle">{{ filings }}</a-layout-footer>
 </template>

@@ -39,7 +39,7 @@
         :rules="[{ required: formItem.required, message: '请输入' + formItem.label }]"
       >
         <a-upload
-          v-model:file-list="formItem.model"
+          v-model="formItem.model"
           name="avatar"
           list-type="picture-card"
           class="avatar-uploader"

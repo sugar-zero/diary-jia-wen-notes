@@ -4,6 +4,9 @@ import { SendOutlined, EditOutlined } from "@ant-design/icons-vue"
 import { type UploadProps, type UploadChangeParam } from "ant-design-vue"
 //引入404图
 import error_image from "@/assets/404.jpg"
+//引入store
+import { userStore } from "@/stores/main"
+const { userid } = userStore()
 //@ts-ignore
 const { proxy } = getCurrentInstance()
 
@@ -15,7 +18,10 @@ interface Data {
     id: number
     create_time: string
     update_time: string
-    author: string
+    author: {
+      owner: string
+      ownerid: number
+    }
     filesList: []
   }[]
   imagegroup: {}[]
@@ -71,6 +77,7 @@ const getMail = () => {
   })
 }
 getMail()
+defineExpose({ getMail }) //暴露出去给父组件Main调用
 
 //上传文件列表
 const fileList = ref<UploadProps["fileList"]>([])
@@ -184,6 +191,8 @@ const updateMail = () => {
         proxy?.$message.success(res.data.message)
         initEditModal()
         getMail()
+      } else {
+        proxy?.$message.error(res.message)
       }
     })
 }
@@ -239,7 +248,7 @@ const updateMail = () => {
   >
     <div class="upperArea">
       <div>
-        #{{ item.id }} @{{ item.author }} 发布于
+        #{{ item.id }} @{{ item.author.owner }} 发布于
         {{
           new Date(item.create_time).toLocaleString(undefined, {
             year: "numeric",
@@ -277,7 +286,7 @@ const updateMail = () => {
         </a-row>
       </a-image-preview-group>
     </div>
-    <div class="lowerArea">
+    <div class="lowerArea" v-if="item.author.ownerid === userid">
       <div class="lowerAreaLeft">
         <a-popconfirm
           title="确定删除吗？"
@@ -313,8 +322,9 @@ const updateMail = () => {
     <a-divider />
     <a-upload
       name="diary"
-      action="api/v1/upload/diary-image"
+      action="api/v1/upload/diary-image-patch"
       :headers="uploadHeaders"
+      :data="{ dirayId: editMailContent.id }"
       v-model:file-list="editMailContent.filesList"
       list-type="picture-card"
       @preview="handlePreview"
@@ -343,8 +353,6 @@ const updateMail = () => {
 .upperArea {
   color: rgba(0, 0, 0, 0.5);
   margin-bottom: 1em;
-  display: flex;
-  justify-content: space-between;
 }
 .centralArea {
   margin-bottom: 1em;
