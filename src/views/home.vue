@@ -191,6 +191,8 @@ const updateMail = () => {
         proxy?.$message.success(res.data.message)
         initEditModal()
         getMail()
+      } else {
+        proxy?.$message.error(res.message)
       }
     })
 }
@@ -320,8 +322,9 @@ const updateMail = () => {
     <a-divider />
     <a-upload
       name="diary"
-      action="api/v1/upload/diary-image"
+      action="api/v1/upload/diary-image-patch"
       :headers="uploadHeaders"
+      :data="{ dirayId: editMailContent.id }"
       v-model:file-list="editMailContent.filesList"
       list-type="picture-card"
       @preview="handlePreview"
