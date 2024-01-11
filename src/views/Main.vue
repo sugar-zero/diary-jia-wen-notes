@@ -3,10 +3,16 @@ import { RouterView } from "vue-router"
 import { ref, type CSSProperties, onMounted, getCurrentInstance } from "vue"
 import userInfoCard from "@/components/userInfoCard.vue"
 import Home from "@/views/Home.vue"
+import type { ComponentInternalInstance } from "vue"
+import { BigIntDecimal } from "ant-design-vue/es/input-number/src/utils/MiniDecimal"
+const MODE = import.meta.env.VITE_NODE_ENV
 const filings = JSON.parse(localStorage.getItem("systemConfig") as string).filings
-const { proxy }: any = getCurrentInstance()
+const { proxy } = getCurrentInstance() as ComponentInternalInstance
 const screenWidth = ref(0)
 const drawer = ref(null)
+const footer = ref()
+const header = ref()
+const minContentHeight = ref(0)
 const siderDrawerOpened = ref(false)
 const siderStyle: CSSProperties = {
   minWidth: "300px",
@@ -14,12 +20,13 @@ const siderStyle: CSSProperties = {
   backgroundColor: "rgba(255,255,255,0)"
 }
 const contentStyle: CSSProperties = {
-  minHeight: "120px",
   lineHeight: "120px",
   paddingTop: "1rem",
   minWidth: "400px",
-  width: "100%"
+  width: "100%",
+  position: "relative"
 }
+
 const headerStyle: CSSProperties = {
   color: "#fff",
   height: 64,
@@ -33,8 +40,9 @@ const headerStyle: CSSProperties = {
 const footerStyle: CSSProperties = {
   textAlign: "center",
   color: "rgba(0, 0, 0, 0.5)",
-  lineHeight: "40px",
-  position: "fixed",
+  // lineHeight: "40px",
+  // position: "absolute",
+  // position: "fixed",
   bottom: 0,
   left: 0,
   right: 0
@@ -53,8 +61,11 @@ getScreenWidth()
 //监听视图宽度变化
 onMounted(() => {
   window.addEventListener("resize", () => {
-    screenWidth.value = window.innerWidth
+    getScreenWidth()
   })
+  //通过ref footer获取组件高度
+  // minContentHeight.value = footer.value.$el.offsetHeight + header.value.$el.offsetHeight
+  // console.log(minContentHeight.value)
 })
 //侧边栏切换
 const siderDrawerSwitch = () => {
@@ -68,7 +79,7 @@ const refreshMailList = () => {
 }
 </script>
 <template>
-  <a-layout-header v-if="screenWidth < 860" :style="headerStyle">
+  <a-layout-header v-if="screenWidth < 860" :style="headerStyle" ref="header">
     <a-button type="primary" style="margin-bottom: 16px" @click="siderDrawerSwitch">
       <MenuUnfoldOutlined v-if="!siderDrawerOpened" />
       <MenuFoldOutlined v-else />
@@ -100,7 +111,11 @@ const refreshMailList = () => {
       <RouterView> <Home ref="home"></Home> </RouterView
     ></a-layout-content>
   </a-layout>
-  <a-layout-footer :style="footerStyle">{{ filings }}</a-layout-footer>
+  <a-layout-footer :style="footerStyle" ref="footer">
+    <!-- <div v-if="MODE === 'development'">当前开发模式</div> -->
+    佳雯的日记 ©2024
+    <a href="https://beian.miit.gov.cn/" target="_blank">{{ filings }}</a>
+  </a-layout-footer>
 </template>
 
 <style scoped>
@@ -120,6 +135,12 @@ const refreshMailList = () => {
 @media only screen and (max-width: 860px) {
   .ant-layout-content {
     padding: 0 10px;
+  }
+}
+.ant-layout-footer {
+  a {
+    color: rgba(0, 0, 0, 0.5);
+    text-decoration: none;
   }
 }
 </style>

@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref, computed, getCurrentInstance } from "vue"
 import { userStore } from "@/stores/main"
-//@ts-ignore
-const { proxy } = getCurrentInstance()
+const { proxy } = getCurrentInstance() as ComponentInternalInstance
 import { message } from "ant-design-vue"
+import type { ComponentInternalInstance } from "vue";
 
 const allowregister = JSON.parse(localStorage.getItem("systemConfig") as string).allowResgister
+const backgroundUrl = JSON.parse(localStorage.getItem("systemConfig") as string).backgroundUrl
 const formData = ref({
   username: "",
   password: "",
@@ -39,6 +40,7 @@ const disabled = computed(() => {
 </script>
 
 <template>
+  <div :style="{ background: `url(${backgroundUrl})` }" class="staticBg"></div>
   <a-form :model="formData" layout="vertical" name="login" class="login-form" @finish="login">
     <a-form-item
       label="用户名"
@@ -98,6 +100,21 @@ const disabled = computed(() => {
 .login-form-button {
   width: 100%;
 }
+.staticBg {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  // min-width: 1000px;
+  zoom: 1;
+  background-color: #fff;
+  background-size: cover;
+  -webkit-background-size: cover;
+  -o-background-size: cover;
+  background-position: center 0;
+}
+
 @media only screen and (max-width: 860px) {
   .login-form {
     position: relative;

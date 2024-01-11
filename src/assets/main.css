@@ -1,11 +1,11 @@
 @import "./base.css";
 
-#app {
+/* #app {
   max-width: 1280px;
   margin: 0 auto;
-  /* padding: 0 2rem; */
+  padding: 0 2rem;
   font-weight: normal;
-}
+} */
 
 /* a,
 .green {
@@ -15,7 +15,7 @@
   padding: 3px;
 } */
 
-body {
+html,body {
   background-color:rgba(245,245,245);
 }
 
