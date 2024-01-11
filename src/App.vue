@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { getCurrentInstance, ref } from "vue"
+import { getCurrentInstance, onMounted, ref } from "vue"
 import { RouterView } from "vue-router"
 import { SmileTwoTone } from "@ant-design/icons-vue"
 import type { ComponentInternalInstance } from "vue"
 const { proxy } = getCurrentInstance() as ComponentInternalInstance
-const getClientVersionTag = import.meta.env.VITE_VERSION_TAG
+const getClientVersionTag = Number(import.meta.env.VITE_VERSION_TAG)
 const getClientVersion = import.meta.env.VITE_VERSION
 const newClientVersionString = ref("0")
 const newClientVersion = ref(0)
@@ -21,7 +21,7 @@ const getSystemConfig = () => {
       ).version.toString()
       newClientVersion.value = JSON.parse(localStorage.getItem("systemConfig") as string).version
       newClientVersionString.value = newClientVersionString.value.split("").join(".")
-      diffVersion.value = JSON.parse(localStorage.getItem("systemConfig") as string).diffversion
+      diffVersion.value = JSON.parse(localStorage.getItem("systemConfig") as string).diffVersion
       switchlocal.value = true
     }
     isMaintenance.value = JSON.parse(localStorage.getItem("systemConfig") as string).maintenance
