@@ -1,6 +1,6 @@
 import Vue from "vue"
 import { message } from "ant-design-vue"
-import { get, post, put, del } from "@/api/api"
+import { get, post, put, del, patch, deldata } from "@/api/api"
 import { aes_encrypt, aes_decrypt } from "@/util/aes"
 
 declare module "@vue/runtime-core" {
@@ -10,6 +10,7 @@ declare module "@vue/runtime-core" {
     $put: put
     $del: del
     $patch: patch
+    $deldata: deldata
     $message: message
     $loading: proxy
     $aes_encrypt: aes_encrypt

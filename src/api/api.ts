@@ -64,3 +64,13 @@ export async function del<T>(url: string, params?: any): Promise<APIResult<T>> {
   const response = await service.delete<APIResult<T>>(url, { params })
   return response.data
 }
+/**
+ * 删除数据
+ * @param url - 删除数据的接口URL
+ * @param data - 可选参数，要删除的数据
+ * @returns Promise<APIResult<T>> - 删除操作的结果
+ */
+export async function deldata<T>(url: string, data?: any): Promise<APIResult<T>> {
+  const response = await service.delete<APIResult<T>>(url, { data })
+  return response.data
+}

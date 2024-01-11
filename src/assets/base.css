@@ -57,9 +57,14 @@
   margin: 0;
   font-weight: normal;
 }
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: normal;
+}
 
 body {
-  min-height: 100vh;
+  height: 100%;
   color: var(--color-text);
   background: var(--color-background);
   transition:
