@@ -3,15 +3,19 @@ import type { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from "a
 import { message } from "ant-design-vue"
 import router from "../router"
 
+// 引入API地址
 const apiUrl = import.meta.env.VITE_BASE_API
 
+// 创建Axios实例
 const service: AxiosInstance = axios.create({
   baseURL: apiUrl,
   timeout: 5000
 })
 
+// 请求拦截器
 service.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
+    // 将token添加到请求头中
     if (localStorage.getItem("token"))
       config.headers.Authorization = `Bearer ${localStorage.getItem("token")}`
     return config
@@ -21,17 +25,16 @@ service.interceptors.request.use(
   }
 )
 
+// 响应拦截器
 service.interceptors.response.use(
   (response: AxiosResponse) => {
     return response
   },
   (error: any) => {
-    // console.log(error)
-    // console.log(error.response)
-    // return Promise.reject(error).catch((error) => {
-    //   console.log(error)
-    //   return error.response
-    // })
+    // 如果响应状态为401（未认证），则处理逻辑为：
+    // 1. 移除localStorage中的token和user
+    // 2. 显示错误消息
+    // 3. 跳转到登录页面
     if (error.response.status === 401) {
       localStorage.removeItem("token")
       localStorage.removeItem("user")

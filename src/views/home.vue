@@ -379,8 +379,8 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
     <div class="centralArea">
       <pre v-html="item.content" style="white-space: pre-wrap; word-wrap: break-word"></pre>
       <a-image-preview-group>
-        <a-row :gutter="[4, 8]">
-          <a-col :span="8" :key="key" v-for="(file, key) in item.filesList">
+        <a-row class="photo_wall" v-if="item.filesList">
+          <a-col :key="key" v-for="(file, key) in item.filesList">
             <a-image :src="file" :height="100" :width="100" :fallback="error_image" />
           </a-col>
         </a-row>
@@ -527,5 +527,13 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
   border: solid 1px;
   border-color: #39c5bb;
   text-align: right;
+}
+.photo_wall {
+  width: 320px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 100px);
+  grid-template-rows: repeat(1, 100px);
+  grid-column-gap: 1%;
+  grid-row-gap: 1%;
 }
 </style>
