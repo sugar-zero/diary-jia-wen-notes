@@ -280,6 +280,7 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
       @preview="handlePreview"
       :multiple="true"
       accept="image/*"
+      :max-count="9"
       @change="handleChange"
       @remove="removeImage"
     >
@@ -379,7 +380,7 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
     <div class="centralArea">
       <pre v-html="item.content" style="white-space: pre-wrap; word-wrap: break-word"></pre>
       <a-image-preview-group>
-        <a-row class="photo_wall" v-if="item.filesList">
+        <a-row class="photo_wall">
           <a-col :key="key" v-for="(file, key) in item.filesList">
             <a-image :src="file" :height="100" :width="100" :fallback="error_image" />
           </a-col>
@@ -481,6 +482,7 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
       list-type="picture-card"
       @preview="handlePreview"
       :multiple="true"
+      :max-count="9"
       accept="image/*"
       @change="handleChange"
     >
@@ -532,8 +534,8 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
   width: 320px;
   display: grid;
   grid-template-columns: repeat(auto-fit, 100px);
-  grid-template-rows: repeat(1, 100px);
+  grid-template-rows: repeat(auto-fit, 100px);
   grid-column-gap: 1%;
-  grid-row-gap: 1%;
+  grid-row-gap: 2%;
 }
 </style>
