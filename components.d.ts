@@ -37,6 +37,8 @@ declare module 'vue' {
     APopconfirm: typeof import('ant-design-vue/es')['Popconfirm']
     AResult: typeof import('ant-design-vue/es')['Result']
     ARow: typeof import('ant-design-vue/es')['Row']
+    ATabPane: typeof import('ant-design-vue/es')['TabPane']
+    ATabs: typeof import('ant-design-vue/es')['Tabs']
     ATextarea: typeof import('ant-design-vue/es')['Textarea']
     AUpload: typeof import('ant-design-vue/es')['Upload']
     ComponentsForm: typeof import('./src/components/componentsForm.vue')['default']

@@ -4,8 +4,7 @@ import { ref, type CSSProperties, onMounted, getCurrentInstance } from "vue"
 import userInfoCard from "@/components/userInfoCard.vue"
 import Home from "@/views/Home.vue"
 import type { ComponentInternalInstance } from "vue"
-import { BigIntDecimal } from "ant-design-vue/es/input-number/src/utils/MiniDecimal"
-const MODE = import.meta.env.VITE_NODE_ENV
+const version = import.meta.env.VITE_VERSION
 const filings = JSON.parse(localStorage.getItem("systemConfig") as string).filings
 const { proxy } = getCurrentInstance() as ComponentInternalInstance
 const screenWidth = ref(0)
@@ -77,6 +76,49 @@ const refreshMailList = () => {
   home.value.getMail()
   proxy?.$message.success("刷新成功")
 }
+// 询问用户是否开启Notification推送权限
+const askNotificationPermission = () => {
+  if (!("Notification" in window)) {
+    proxy?.$message.error("您的浏览器不支持通知。")
+  }
+  Notification.requestPermission((res) => {
+    if (res === "granted") {
+      console.log("通知权限已授权")
+      proxy?.$message.success("通知权限已授权")
+      subscribeToPushService()
+    } else {
+      console.log("通知权限被拒绝")
+      proxy?.$message.error("通知权限已拒绝，请打开通知权限")
+    }
+  })
+}
+//订阅推送服务
+const subscribeToPushService = () => {
+  navigator.serviceWorker.ready.then((registration) => {
+    if (!registration.pushManager) {
+      alert("推送通知不支持。")
+      return false
+    }
+    registration.pushManager
+      .subscribe({
+        userVisibleOnly: true, // Web推送必须对用户可见
+        applicationServerKey: import.meta.env.VITE_APP_SERVER_PUBLIC_KEY
+        // 你的VAPID公钥
+      })
+      .then((subscription) => {
+        // console.log("推送订阅成功：", subscription)
+        // 发送订阅到应用服务器
+        proxy?.$post("/subscribe", subscription.toJSON())
+      })
+      .catch((e) => {
+        if (Notification.permission === "denied") {
+          console.warn("权限被拒绝")
+        } else {
+          console.error("无法订阅推送", e)
+        }
+      })
+  })
+}
 </script>
 <template>
   <a-layout-header v-if="screenWidth < 860" :style="headerStyle" ref="header">
@@ -101,11 +143,14 @@ const refreshMailList = () => {
       :bodyStyle="drawerBodyStyle"
     >
       <a-layout-sider :style="siderStyle" :width="screenWidth * 0.7"
-        ><userInfoCard
+        ><userInfoCard @askNotificationPermission="askNotificationPermission"
       /></a-layout-sider>
     </a-drawer>
     <a-layout-sider :style="siderStyle" v-else :width="260"
-      ><userInfoCard :screenStatus="'pc'" @refreshMailList="refreshMailList"
+      ><userInfoCard
+        :screenStatus="'pc'"
+        @refreshMailList="refreshMailList"
+        @askNotificationPermission="askNotificationPermission"
     /></a-layout-sider>
     <a-layout-content :style="contentStyle">
       <RouterView> <Home ref="home"></Home> </RouterView

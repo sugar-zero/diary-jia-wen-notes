@@ -1,7 +1,7 @@
 import CryptoJS from "crypto-js"
 
-const KEY = CryptoJS.enc.Utf8.parse("42812104913")
-const IV = CryptoJS.enc.Utf8.parse("31940121824")
+const KEY = CryptoJS.enc.Utf8.parse("42812104913") //记得改
+const IV = CryptoJS.enc.Utf8.parse("31940121824") //记得改
 
 /**
  * 使用AES算法对输入的文本进行加密
