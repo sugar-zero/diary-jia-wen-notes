@@ -78,7 +78,10 @@ const refreshMailList = () => {
 }
 // 询问用户是否开启Notification推送权限
 const askNotificationPermission = () => {
-  Notification.requestPermission().then((res) => {
+  if (!("Notification" in window)) {
+    proxy?.$message.error("您的浏览器不支持通知。")
+  }
+  Notification.requestPermission((res) => {
     if (res === "granted") {
       console.log("通知权限已授权")
       proxy?.$message.success("通知权限已授权")
@@ -140,7 +143,7 @@ const subscribeToPushService = () => {
       :bodyStyle="drawerBodyStyle"
     >
       <a-layout-sider :style="siderStyle" :width="screenWidth * 0.7"
-        ><userInfoCard
+        ><userInfoCard @askNotificationPermission="askNotificationPermission"
       /></a-layout-sider>
     </a-drawer>
     <a-layout-sider :style="siderStyle" v-else :width="260"

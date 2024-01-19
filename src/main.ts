@@ -48,12 +48,16 @@ nextTick(() => {
     app.component(key, Icons[key])
   }
 })
+
 // 注册service-worker
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
-    .register("/service-worker.js")
+    .register("/service-worker.js", {
+      scope: "/"
+    })
     .then((registration) => {
       console.log("service-worker注册成功", registration)
+      // message.success("service-worker注册成功")
     })
     .catch((err) => {
       console.log("service-worker注册失败", err)
