@@ -1,5 +1,11 @@
 <script lang="ts" setup>
-import { EditOutlined, LogoutOutlined, SyncOutlined, BellOutlined } from "@ant-design/icons-vue"
+import {
+  EditOutlined,
+  LogoutOutlined,
+  SyncOutlined,
+  BellOutlined,
+  ProfileOutlined
+} from "@ant-design/icons-vue"
 import { getCurrentInstance, reactive, ref, h } from "vue"
 import componentsForm from "./componentsForm.vue"
 import router from "../router"
@@ -7,6 +13,7 @@ import { userStore } from "@/stores/main"
 // @ts-ignore
 const { proxy } = getCurrentInstance()
 const { screenStatus } = defineProps(["screenStatus"])
+const activeKey = ref("1")
 const logout = () => {
   const useUserStore = userStore()
   useUserStore.logout()
@@ -115,15 +122,6 @@ const askNotificationPermission = () => {
       <sync-outlined @click="refreshMailList" />
       <a-popconfirm
         placement="bottomRight"
-        title="要订阅推送吗？"
-        ok-text="是的"
-        cancel-text="不了"
-        @confirm="askNotificationPermission"
-      >
-        <BellOutlined />
-      </a-popconfirm>
-      <a-popconfirm
-        placement="bottomRight"
         title="是否要退出登录？"
         ok-text="是的"
         cancel-text="不了"
@@ -185,7 +183,7 @@ const askNotificationPermission = () => {
       style="margin-left: 10px"
       type="text"
       @click="EditUserInfoModal"
-      >修改个人信息</a-button
+      >个人信息与订阅</a-button
     >
     <a-popconfirm
       placement="bottomRight"
@@ -199,19 +197,46 @@ const askNotificationPermission = () => {
   </div>
   <a-modal
     v-model:open="showEditUserInfoModal"
-    title="修改个人信息"
+    title="个人信息与订阅"
     ok-text="修改"
     cancel-text="取消"
     :maskClosable="false"
     :footer="null"
     :destroyOnClose="true"
   >
-    <components-form
-      :formData="userInfo"
-      :formLabelData="userInfoLableForm"
-      :formConfig="formConfig"
-      @edit="updateUserInfo"
-    />
+    <a-tabs v-model:activeKey="activeKey">
+      <a-tab-pane key="1">
+        <template #tab>
+          <span>
+            <ProfileOutlined />
+            个人信息
+          </span>
+        </template>
+        <components-form
+          :formData="userInfo"
+          :formLabelData="userInfoLableForm"
+          :formConfig="formConfig"
+          @edit="updateUserInfo"
+        />
+      </a-tab-pane>
+      <a-tab-pane key="2">
+        <template #tab>
+          <span>
+            <BellOutlined />
+            通知订阅
+          </span>
+        </template>
+        <a-popconfirm
+          placement="topLeft"
+          title="要订阅消息推送吗？可能稍后需要您授权才能生效"
+          ok-text="是的"
+          cancel-text="不了"
+          @confirm="askNotificationPermission"
+        >
+          <a-button type="primary" :icon="h(BellOutlined)">订阅通知</a-button>
+        </a-popconfirm>
+      </a-tab-pane>
+    </a-tabs>
   </a-modal>
 </template>
 <style lange="less">

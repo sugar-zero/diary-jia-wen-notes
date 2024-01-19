@@ -85,7 +85,7 @@ const askNotificationPermission = () => {
       subscribeToPushService()
     } else {
       console.log("通知权限被拒绝")
-      proxy?.$message.success("通知权限已拒绝")
+      proxy?.$message.error("通知权限已拒绝，请打开通知权限")
     }
   })
 }
@@ -99,11 +99,11 @@ const subscribeToPushService = () => {
     registration.pushManager
       .subscribe({
         userVisibleOnly: true, // Web推送必须对用户可见
-        applicationServerKey:import.meta.env.VITE_APP_SERVER_PUBLIC_KEY
+        applicationServerKey: import.meta.env.VITE_APP_SERVER_PUBLIC_KEY
         // 你的VAPID公钥
       })
       .then((subscription) => {
-        console.log("推送订阅成功：", subscription)
+        // console.log("推送订阅成功：", subscription)
         // 发送订阅到应用服务器
         proxy?.$post("/subscribe", subscription.toJSON())
       })

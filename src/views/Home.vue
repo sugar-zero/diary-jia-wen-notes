@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { ref, h, reactive, getCurrentInstance } from "vue"
-import { SendOutlined, EditOutlined, CommentOutlined } from "@ant-design/icons-vue"
+import {
+  SendOutlined,
+  EditOutlined,
+  CommentOutlined,
+  RightCircleFilled
+} from "@ant-design/icons-vue"
 import { type UploadProps, type UploadChangeParam } from "ant-design-vue"
 //引入404图
 import error_image from "@/assets/404.jpg"
@@ -42,8 +47,12 @@ interface Data {
       }
     }[]
     isCurrentUserLiked: boolean
-    comment: string
+    comment: {
+      reply?: object
+      content: string
+    }
     commentShow: boolean
+    placeholder: string
   }[]
 }
 //编辑日记接口
@@ -216,8 +225,20 @@ const updateMail = () => {
       }
     })
 }
-// 评论
-const postComment = (diaryId: number, userId: number, comment: string) => {
+// 编辑评论
+const editComment = (action: string, item: any, reply?: any) => {
+  if (action === "comment") {
+    item.commentShow = !item.commentShow
+    item.placeholder = "评论"
+    item.comment = { content: "" }
+  } else if (action === "reply") {
+    item.commentShow = item.commentShow ? item.commentShow : !item.commentShow
+    item.placeholder = `回复@${reply.reply.user}`
+    item.comment = { reply: reply.reply, content: "" }
+  }
+}
+// 发布评论
+const postComment = (diaryId: number, userId: number, comment: object) => {
   proxy?.$post("/diary/comment", { diaryId, userId, comment }).then((res: any) => {
     if (res.code == 200) {
       proxy?.$message.success(res.data.message)
@@ -388,20 +409,6 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
       </a-image-preview-group>
     </div>
     <div class="lowerArea">
-      <!-- <div class="lowerAreaLeft" v-if="item.author.ownerid === userid">
-        <a-popconfirm
-          title="确定删除吗？"
-          placement="bottomLeft"
-          cancelText="取消"
-          okText="删除"
-          okType="danger"
-          @confirm="deleteMail(item.id)"
-        >
-          <template #icon><question-circle-outlined style="color: red" /></template>
-          <DeleteOutlined style="font-size: 18px" />
-        </a-popconfirm>
-        <EditOutlined style="font-size: 18px" @click="activateEditMail(item)" />
-      </div> -->
       <div class="lowerArearight"></div>
       <div style="display: flex; justify-content: space-between; width: 50px">
         <LikeTwoTone
@@ -410,7 +417,7 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
           @click="cancelLikeMail(userid, item.id)"
         />
         <LikeOutlined style="font-size: 18px" @click="likeMail(userid, item.id)" v-else />
-        <CommentOutlined style="font-size: 18px" @click="item.commentShow = !item.commentShow" />
+        <CommentOutlined style="font-size: 18px" @click="editComment('comment', item)" />
       </div>
     </div>
     <!-- 点赞/评论区 -->
@@ -421,8 +428,8 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
       </div>
       <div v-if="item.commentShow" class="commentStyle">
         <a-textarea
-          v-model:value="item.comment"
-          placeholder="评论"
+          v-model:value="item.comment.content"
+          :placeholder="item.placeholder"
           :auto-size="{ minRows: 3, maxRows: 5 }"
           :rows="4"
           allow-clear
@@ -454,6 +461,10 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
         >
           <DeleteFilled />
         </a-popconfirm>
+        <RightCircleFilled
+          v-else
+          @click="editComment('reply', item, { reply: commentItem.commentator })"
+        />
       </div>
     </div>
   </a-card>
