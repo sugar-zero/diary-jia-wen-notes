@@ -3,7 +3,7 @@ import { createApp, nextTick } from "vue"
 import { message } from "ant-design-vue"
 import "ant-design-vue/dist/reset.css"
 import { createPinia } from "pinia"
-import { get, post, put, del, patch } from "@/api/api"
+import { get, post, put, del, patch, deldata } from "@/api/api"
 import { aes_encrypt, aes_decrypt } from "@/util/aes"
 // 引入icon
 import * as Icons from "@ant-design/icons-vue"
@@ -39,6 +39,7 @@ app.config.globalProperties.$post = post
 app.config.globalProperties.$put = put
 app.config.globalProperties.$del = del
 app.config.globalProperties.$patch = patch
+app.config.globalProperties.$deldata = deldata
 
 nextTick(() => {
   for (const key in Icons) {
@@ -48,4 +49,18 @@ nextTick(() => {
   }
 })
 
+// 注册service-worker
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker
+    .register("/service-worker.js", {
+      scope: "/"
+    })
+    .then((registration) => {
+      console.log("service-worker注册成功", registration)
+      // message.success("service-worker注册成功")
+    })
+    .catch((err) => {
+      console.log("service-worker注册失败", err)
+    })
+}
 app.use(router).use(createPinia()).mount("#app")

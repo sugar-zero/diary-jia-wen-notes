@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { getCurrentInstance, ref } from "vue"
+import { getCurrentInstance, onMounted, ref } from "vue"
 import { RouterView } from "vue-router"
-//我不想惯着ts了...我已经写了声明了，调用.$xxx还是报错。。。我直接用vue3写法了，有能力的自己改吧
-// @ts-ignore
-const { proxy } = getCurrentInstance()
-const getClientVersionTag = import.meta.env.VITE_VERSION_TAG
+import { SmileTwoTone } from "@ant-design/icons-vue"
+import type { ComponentInternalInstance } from "vue"
+const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const getClientVersionTag = Number(import.meta.env.VITE_VERSION_TAG)
 const getClientVersion = import.meta.env.VITE_VERSION
 const newClientVersionString = ref("0")
 const newClientVersion = ref(0)
 const diffVersion = ref(0)
 const switchlocal = ref(false)
+const isMaintenance = ref(false)
 
 const getSystemConfig = () => {
   proxy?.$get("/system/config").then((res: any) => {
@@ -20,14 +21,15 @@ const getSystemConfig = () => {
       ).version.toString()
       newClientVersion.value = JSON.parse(localStorage.getItem("systemConfig") as string).version
       newClientVersionString.value = newClientVersionString.value.split("").join(".")
-      diffVersion.value = JSON.parse(localStorage.getItem("systemConfig") as string).diffversion
+      diffVersion.value = JSON.parse(localStorage.getItem("systemConfig") as string).diffVersion
       switchlocal.value = true
     }
+    isMaintenance.value = JSON.parse(localStorage.getItem("systemConfig") as string).maintenance
   })
 }
 getSystemConfig()
 const updateVersion = () => {
-  proxy.$router.go(0)
+  proxy?.$router.go(0)
 }
 </script>
 
@@ -49,7 +51,12 @@ const updateVersion = () => {
     <p>发现新版本，是否立即更新？</p>
     <p>当前版本:{{ getClientVersion }} 最新版本:{{ newClientVersionString }}</p>
   </a-modal>
-  <RouterView />
+  <a-result status="500" title="暂时无法访问" sub-title="站点目前正在维护中~" v-if="isMaintenance">
+    <template #icon>
+      <SmileTwoTone />
+    </template>
+  </a-result>
+  <RouterView v-else />
 </template>
 
 <style scoped></style>
