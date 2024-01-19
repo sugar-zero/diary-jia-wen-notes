@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { EditOutlined, LogoutOutlined, SyncOutlined } from "@ant-design/icons-vue"
+import { EditOutlined, LogoutOutlined, SyncOutlined, BellOutlined } from "@ant-design/icons-vue"
 import { getCurrentInstance, reactive, ref, h } from "vue"
 import componentsForm from "./componentsForm.vue"
 import router from "../router"
@@ -97,9 +97,12 @@ const updateUserInfo = (row: any) => {
   })
 }
 //获取父组件转发的日记刷新方法
-const emits = defineEmits(["refreshMailList"])
+const emits = defineEmits(["refreshMailList", "askNotificationPermission"])
 const refreshMailList = () => {
   emits("refreshMailList")
+}
+const askNotificationPermission = () => {
+  emits("askNotificationPermission")
 }
 </script>
 <template>
@@ -110,6 +113,15 @@ const refreshMailList = () => {
     <template #actions>
       <edit-outlined key="edit" @click="EditUserInfoModal" />
       <sync-outlined @click="refreshMailList" />
+      <a-popconfirm
+        placement="bottomRight"
+        title="要订阅推送吗？"
+        ok-text="是的"
+        cancel-text="不了"
+        @confirm="askNotificationPermission"
+      >
+        <BellOutlined />
+      </a-popconfirm>
       <a-popconfirm
         placement="bottomRight"
         title="是否要退出登录？"

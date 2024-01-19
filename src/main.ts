@@ -48,5 +48,15 @@ nextTick(() => {
     app.component(key, Icons[key])
   }
 })
-
+// 注册service-worker
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker
+    .register("/service-worker.js")
+    .then((registration) => {
+      console.log("service-worker注册成功", registration)
+    })
+    .catch((err) => {
+      console.log("service-worker注册失败", err)
+    })
+}
 app.use(router).use(createPinia()).mount("#app")
