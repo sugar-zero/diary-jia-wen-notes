@@ -14,6 +14,7 @@ import { userStore } from "@/stores/main"
 const { proxy } = getCurrentInstance()
 const { screenStatus } = defineProps(["screenStatus"])
 const activeKey = ref("1")
+const NotificationPermission = ref(false)
 const logout = () => {
   const useUserStore = userStore()
   useUserStore.logout()
@@ -110,6 +111,14 @@ const refreshMailList = () => {
 }
 const askNotificationPermission = () => {
   emits("askNotificationPermission")
+}
+// 检测一下通知权限
+if (Notification.permission === "default") {
+  NotificationPermission.value = false
+} else if (Notification.permission === "granted") {
+  NotificationPermission.value = true
+} else if (Notification.permission === "denied") {
+  NotificationPermission.value = false
 }
 </script>
 <template>
@@ -232,8 +241,11 @@ const askNotificationPermission = () => {
           ok-text="是的"
           cancel-text="不了"
           @confirm="askNotificationPermission"
+          :disabled="NotificationPermission"
         >
-          <a-button type="primary" :icon="h(BellOutlined)">订阅通知</a-button>
+          <a-button type="primary" :icon="h(BellOutlined)" :disabled="NotificationPermission">{{
+            NotificationPermission ? "已订阅通知" : "订阅通知"
+          }}</a-button>
         </a-popconfirm>
       </a-tab-pane>
     </a-tabs>
