@@ -14,7 +14,7 @@ const isMaintenance = ref(false)
 
 const getSystemConfig = () => {
   proxy?.$get("/system/config").then((res: any) => {
-    localStorage.setItem("systemConfig", JSON.stringify(res.data.data))
+    localStorage.setItem("systemConfig", JSON.stringify(res.data))
     if (getClientVersionTag < JSON.parse(localStorage.getItem("systemConfig") as string).version) {
       newClientVersionString.value = JSON.parse(
         localStorage.getItem("systemConfig") as string

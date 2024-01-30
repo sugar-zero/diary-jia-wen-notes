@@ -4,7 +4,6 @@ import { ref, type CSSProperties, onMounted, getCurrentInstance } from "vue"
 import userInfoCard from "@/components/userInfoCard.vue"
 import Home from "@/views/Home.vue"
 import type { ComponentInternalInstance } from "vue"
-const version = import.meta.env.VITE_VERSION
 const filings = JSON.parse(localStorage.getItem("systemConfig") as string).filings
 const { proxy } = getCurrentInstance() as ComponentInternalInstance
 const screenWidth = ref(0)
