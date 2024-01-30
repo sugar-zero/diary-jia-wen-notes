@@ -4,16 +4,20 @@ import {
   LogoutOutlined,
   SyncOutlined,
   BellOutlined,
-  ProfileOutlined
+  ProfileOutlined,
+  LockOutlined
 } from "@ant-design/icons-vue"
 import { getCurrentInstance, reactive, ref, h } from "vue"
 import componentsForm from "./componentsForm.vue"
 import router from "../router"
 import { userStore } from "@/stores/main"
+import type { Rule } from "ant-design-vue/es/form"
 // @ts-ignore
 const { proxy } = getCurrentInstance()
+const version = import.meta.env.VITE_VERSION
 const { screenStatus } = defineProps(["screenStatus"])
 const activeKey = ref("1")
+const NotificationPermission = ref(false)
 const logout = () => {
   const useUserStore = userStore()
   useUserStore.logout()
@@ -72,6 +76,16 @@ const formConfig = ref({
     }
   ]
 })
+interface userSecurity {
+  originalPassword: string
+  password: string
+  confirmPassword: string
+}
+const userSecurity = ref<userSecurity>({
+  originalPassword: "",
+  password: "",
+  confirmPassword: ""
+})
 // let tryCount: number = 0
 const getUserInfo = () => {
   proxy?.$get("/user/info").then((res: any) => {
@@ -97,8 +111,6 @@ const updateUserInfo = (row: any) => {
       userInfo.nickname = res.data.data.nickname
       userInfo.username = res.data.data.username
       userInfo.signature = res.data.data.signature
-      userInfo.avatar = res.data.data.avatar
-      userInfo.userBg = res.data.data.userBg
       userInfoArray.value = [res.data.data]
     }
   })
@@ -110,6 +122,69 @@ const refreshMailList = () => {
 }
 const askNotificationPermission = () => {
   emits("askNotificationPermission")
+}
+// 检测一下通知权限
+if (Notification.permission === "default") {
+  NotificationPermission.value = false
+} else if (Notification.permission === "granted") {
+  NotificationPermission.value = true
+} else if (Notification.permission === "denied") {
+  NotificationPermission.value = false
+}
+// 用户修改密码规则校验
+const userSecurityRules: Record<string, Rule[]> = {
+  originalPassword: [
+    {
+      required: true,
+      message: "请输入原密码"
+    },
+    {
+      min: 6,
+      max: 50,
+      message: "密码长度为6-50位"
+    }
+  ],
+  password: [
+    {
+      required: true,
+      message: "请输入新密码"
+    },
+    {
+      min: 6,
+      max: 50,
+      message: "密码长度为6-50位"
+    }
+  ],
+  confirmPassword: [
+    {
+      required: true,
+      message: "请再次输入密码"
+    },
+    {
+      min: 6,
+      max: 50,
+      message: "密码长度为6-50位"
+    },
+    {
+      validator: async (rule: Rule, value: string) => {
+        if (value !== userSecurity.value.password) {
+          return Promise.reject("两次密码不一致")
+        } else {
+          return Promise.resolve()
+        }
+      }
+    }
+  ]
+}
+const updateUserSecurity = (value: userSecurity) => {
+  proxy?.$put("/user/security", userSecurity.value).then((res: any) => {
+    if (res.code == 200) {
+      proxy?.$message.success(res.data.message)
+      logout()
+    } else {
+      proxy?.$message.error(res.message)
+    }
+  })
 }
 </script>
 <template>
@@ -222,8 +297,49 @@ const askNotificationPermission = () => {
       <a-tab-pane key="2">
         <template #tab>
           <span>
+            <LockOutlined />
+            安全
+          </span>
+        </template>
+        <a-form :model="userSecurity" :rules="userSecurityRules" @finish="updateUserSecurity">
+          <a-form-item label="原密码" name="originalPassword">
+            <a-input-password
+              v-model:value="userSecurity.originalPassword"
+              placeholder="为空则不修改密码"
+            />
+          </a-form-item>
+          <a-form-item label="新密码" name="password">
+            <a-input-password
+              v-model:value="userSecurity.password"
+              :placeholder="!userSecurity.originalPassword ? '为空则不修改密码' : '请输入新密码'"
+            />
+          </a-form-item>
+          <a-form-item label="确认新密码" name="confirmPassword">
+            <a-input-password
+              v-model:value="userSecurity.confirmPassword"
+              :placeholder="!userSecurity.password ? '为空则不修改密码' : '请确认密码'"
+            />
+          </a-form-item>
+          <a-form-item>
+            <a-button
+              danger
+              type="primary"
+              html-type="submit"
+              :disabled="
+                !userSecurity.originalPassword ||
+                !userSecurity.confirmPassword ||
+                !userSecurity.password
+              "
+              >修改密码</a-button
+            >
+          </a-form-item>
+        </a-form>
+      </a-tab-pane>
+      <a-tab-pane key="3">
+        <template #tab>
+          <span>
             <BellOutlined />
-            通知订阅
+            通知订阅与关于
           </span>
         </template>
         <a-popconfirm
@@ -232,8 +348,13 @@ const askNotificationPermission = () => {
           ok-text="是的"
           cancel-text="不了"
           @confirm="askNotificationPermission"
+          :disabled="NotificationPermission"
         >
-          <a-button type="primary" :icon="h(BellOutlined)">订阅通知</a-button>
+          <a-button type="primary" :icon="h(BellOutlined)" :disabled="NotificationPermission">{{
+            NotificationPermission ? "已订阅通知" : "订阅通知"
+          }}</a-button>
+          <a-divider />
+          <p>当前版本：{{ version }}</p>
         </a-popconfirm>
       </a-tab-pane>
     </a-tabs>
