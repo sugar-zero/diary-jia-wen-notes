@@ -12,15 +12,8 @@
         <a-input
           v-model:value="internalFormData[formItem.model]"
           :placeholder="formItem.placeholder"
-          v-if="formItem.type != 'passwd'"
           ><template #prefix><component :is="icons[formItem.icon]" /></template
         ></a-input>
-        <a-input-password
-          v-model:value="internalFormData[formItem.model]"
-          :placeholder="formItem.placeholder"
-          v-else
-          ><template #prefix><component :is="icons[formItem.icon]" /></template
-        ></a-input-password>
       </a-form-item>
       <!-- 头像 -->
       <a-form-item
@@ -43,7 +36,7 @@
           name="avatar"
           list-type="picture-card"
           class="avatar-uploader"
-          action="api/v1/upload/avatar"
+          action="api/v2/upload/avatar"
           :headers="uploadHeaders"
           @change="handleChange"
         >
@@ -73,7 +66,7 @@
           list-type="picture-card"
           class="avatar-uploader"
           :headers="uploadHeaders"
-          action="api/v1/upload/img"
+          action="api/v2/upload/img"
           @change="handleChangeUserBg"
         >
           <img

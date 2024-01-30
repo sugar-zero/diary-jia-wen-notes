@@ -294,7 +294,7 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
     <a-divider />
     <a-upload
       name="diary"
-      action="api/v1/upload/diary-image"
+      action="api/v2/upload/diary-image"
       :headers="uploadHeaders"
       v-model:file-list="fileList"
       list-type="picture-card"
@@ -400,13 +400,13 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
     </div>
     <div class="centralArea">
       <pre v-html="item.content" style="white-space: pre-wrap; word-wrap: break-word"></pre>
-      <a-image-preview-group>
-        <a-row class="photo_wall">
-          <a-col :key="key" v-for="(file, key) in item.filesList">
-            <a-image :src="file" :height="100" :width="100" :fallback="error_image" />
-          </a-col>
-        </a-row>
-      </a-image-preview-group>
+      <!-- <a-image-preview-group> -->
+      <a-row class="photo_wall">
+        <a-col :key="key" v-for="(file, key) in item.filesList">
+          <a-image :src="file" :height="100" :width="100" loading="lazy" :error="error_image" />
+        </a-col>
+      </a-row>
+      <!-- </a-image-preview-group> -->
     </div>
     <div class="lowerArea">
       <div class="lowerArearight"></div>
@@ -486,7 +486,7 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
     <a-divider />
     <a-upload
       name="diary"
-      action="api/v1/upload/diary-image-patch"
+      action="api/v2/upload/diary-image-patch"
       :headers="uploadHeaders"
       :data="{ dirayId: editMailContent.id }"
       v-model:file-list="editMailContent.filesList"

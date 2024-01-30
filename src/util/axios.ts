@@ -1,6 +1,6 @@
 import axios from "axios"
 import type { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from "axios"
-import { message } from "ant-design-vue"
+import { message, Modal } from "ant-design-vue"
 import router from "../router"
 
 // 引入API地址
@@ -40,6 +40,19 @@ service.interceptors.response.use(
       localStorage.removeItem("user")
       message.error(error.response.data.message)
       router.push({ name: "login" })
+    } else if (error.response.status === 503) {
+      Modal.error({
+        title: "服务目前不可用",
+        content: error.response.data.message,
+        centered: true,
+        okText: "确认",
+        onOk() {
+          router.go(0)
+        },
+        onCancel() {
+          router.go(0)
+        }
+      })
     }
     return error.response
   }

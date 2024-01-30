@@ -2,8 +2,10 @@
 import { ref, computed, getCurrentInstance } from "vue"
 import { userStore } from "@/stores/main"
 const { proxy } = getCurrentInstance() as ComponentInternalInstance
-import { message } from "ant-design-vue"
-import type { ComponentInternalInstance } from "vue";
+import { message, Modal } from "ant-design-vue"
+import { MailOutlined } from "@ant-design/icons-vue"
+import { h, type ComponentInternalInstance } from "vue"
+import { type Rule } from "ant-design-vue/es/form"
 
 const allowregister = JSON.parse(localStorage.getItem("systemConfig") as string).allowResgister
 const backgroundUrl = JSON.parse(localStorage.getItem("systemConfig") as string).backgroundUrl
@@ -12,6 +14,7 @@ const formData = ref({
   password: "",
   remember: false
 })
+const forgotPasswordModal = ref(false)
 const disabledLogin = ref(false)
 const login = () => {
   message.loading({ content: "登录中...", key: "login" })
@@ -27,16 +30,49 @@ const login = () => {
         proxy?.$router.push({ name: "home" })
         const useUserStore = userStore()
         useUserStore.login(res.data.data.userInfo)
-      }
-      if (res.code === 400) {
+      } else if (res.code === 400) {
         disabledLogin.value = false
         message.error({ content: res.message, key: "login" })
+      } else if (res.code === 403) {
+        disabledLogin.value = false
+        message.error({ content: "登录失败", key: "login" })
+        Modal.error({
+          title: "登录失败",
+          content: h("div", {}, [
+            h("span", { style: "color: red;font-weight: bold;" }, res.data.prompt),
+            h(
+              "p",
+              `停止时间: ${new Date(res.data.begin_time).toLocaleString()} ~ ${new Date(
+                res.data.end_time
+              ).toLocaleString()}`
+            )
+          ]),
+          okText: "确认",
+          centered: true
+        })
       }
     })
 }
 const disabled = computed(() => {
   return !(formData.value.username && formData.value.password) || disabledLogin.value
 })
+
+const emailInfo = ref({
+  email: ""
+})
+const forgotPasswordRules: Record<string, Rule[]> = {
+  email: [
+    { required: true, message: "请输入邮箱" },
+    { type: "email", message: "这不是一个合法的邮箱" }
+  ]
+}
+
+// 发送找回密码邮件
+const sendEmail = () => {
+  proxy?.$post("/user/forgotPassword", { email: emailInfo.value.email }).then((res: any) => {
+    res.code === 200 ? message.success(res.data.message) : message.error(res.message)
+  })
+}
 </script>
 
 <template>
@@ -65,7 +101,9 @@ const disabled = computed(() => {
     <a-form-item>
       <a-form-item name="remember" no-style>
         <a-checkbox v-model:checked="formData.remember">记住我</a-checkbox>
-        <a-button class="login-form-forgot" type="link">忘记密码(还没做)</a-button>
+        <a-button class="login-form-forgot" type="link" @click="forgotPasswordModal = true"
+          >忘记密码</a-button
+        >
       </a-form-item>
     </a-form-item>
 
@@ -79,6 +117,25 @@ const disabled = computed(() => {
       </div>
     </a-form-item>
   </a-form>
+  <a-modal v-model:open="forgotPasswordModal" title="找回您的密码" :footer="null">
+    <a-form
+      :model="emailInfo"
+      name="forgotPassword"
+      @finish="sendEmail"
+      :rules="forgotPasswordRules"
+    >
+      <a-form-item name="email">
+        <a-input v-model:value="emailInfo.email" placeholder="请输入邮箱">
+          <template #prefix>
+            <MailOutlined />
+          </template>
+        </a-input>
+      </a-form-item>
+      <a-form-item>
+        <a-button type="primary" html-type="submit">提交</a-button>
+      </a-form-item>
+    </a-form>
+  </a-modal>
 </template>
 
 <style scoped lang="less">
