@@ -15,6 +15,9 @@ import type { ComponentInternalInstance } from "vue"
 const { userid } = userStore()
 const { proxy } = getCurrentInstance() as ComponentInternalInstance
 
+const pageSize = ref(20)
+const current = ref(1)
+const postedListLength = ref(100)
 interface Data {
   content: String
   contentFileList: {}[]
@@ -87,8 +90,8 @@ const postedMail = () => {
         data.content = ""
         data.contentFileList = []
         fileList.value = []
-        data.postedList = res.data.data
         postedMailLoading.value = false
+        getMail()
       } else {
         proxy?.$message.error(res.message)
         postedMailLoading.value = false
@@ -98,9 +101,10 @@ const postedMail = () => {
 
 //获取全部日记列表
 const getMail = () => {
-  proxy?.$get("/diary/record").then((res: any) => {
+  proxy?.$get(`/diary/record?page=${current.value}&size=${pageSize.value}`).then((res: any) => {
     if (res.code == 200) {
-      data.postedList = res.data
+      data.postedList = res.data.diaries
+      postedListLength.value = res.data.totalCount
     }
   })
 }
@@ -398,12 +402,20 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
         }}
       </div>
     </div>
+    <br />
     <div class="centralArea">
       <pre v-html="item.content" style="white-space: pre-wrap; word-wrap: break-word"></pre>
       <!-- <a-image-preview-group> -->
       <a-row class="photo_wall">
         <a-col :key="key" v-for="(file, key) in item.filesList">
-          <a-image :src="file" :height="100" :width="100" loading="lazy" :error="error_image" />
+          <a-image
+            :src="file"
+            :height="100"
+            :width="100"
+            loading="lazy"
+            :error="error_image"
+            decoding="async"
+          />
         </a-col>
       </a-row>
       <!-- </a-image-preview-group> -->
@@ -468,6 +480,12 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
       </div>
     </div>
   </a-card>
+  <a-pagination
+    v-model:current="current"
+    v-model:pageSize="pageSize"
+    show-size-changer
+    :total="postedListLength"
+  />
   <!-- 编辑日记 -->
   <a-modal
     v-model:open="editMailModalOpen"
