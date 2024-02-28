@@ -485,6 +485,7 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
     v-model:pageSize="pageSize"
     show-size-changer
     :total="postedListLength"
+    @change="getMail"
   />
   <!-- 编辑日记 -->
   <a-modal
