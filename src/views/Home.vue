@@ -15,7 +15,7 @@ import type { ComponentInternalInstance } from "vue"
 const { userid } = userStore()
 const { proxy } = getCurrentInstance() as ComponentInternalInstance
 
-const pageSize = ref(20)
+const pageSize = ref(10)
 const current = ref(1)
 const postedListLength = ref(100)
 interface Data {
@@ -402,9 +402,12 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
         }}
       </div>
     </div>
-    <br />
     <div class="centralArea">
-      <pre v-html="item.content" style="white-space: pre-wrap; word-wrap: break-word"></pre>
+      <pre
+        v-if="item.content"
+        v-html="item.content"
+        style="white-space: pre-wrap; word-wrap: break-word; margin-bottom: 0.5em"
+      ></pre>
       <!-- <a-image-preview-group> -->
       <a-row class="photo_wall">
         <a-col :key="key" v-for="(file, key) in item.filesList">
@@ -480,12 +483,15 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
       </div>
     </div>
   </a-card>
+  <!-- 分页组件 -->
   <a-pagination
     v-model:current="current"
     v-model:pageSize="pageSize"
+    :pageSizeOptions="[10, 20, 30, 50, 100]"
     show-size-changer
     :total="postedListLength"
     @change="getMail"
+    :showTotal="(total: string, range: string) => `${range[0]}-${range[1]} 条，共 ${total} 条`"
   />
   <!-- 编辑日记 -->
   <a-modal
@@ -536,10 +542,10 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
 }
 .upperArea {
   color: rgba(0, 0, 0, 0.5);
-  margin-bottom: 1em;
+  margin-bottom: 0.5em;
 }
 .centralArea {
-  margin-bottom: 1em;
+  margin-bottom: 0.5em;
 }
 .lowerArea {
   font-size: 12px;
