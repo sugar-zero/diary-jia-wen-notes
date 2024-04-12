@@ -103,8 +103,15 @@ const postedMail = () => {
 const getMail = () => {
   proxy?.$get(`/diary/record?page=${current.value}&size=${pageSize.value}`).then((res: any) => {
     if (res.code == 200) {
-      data.postedList = res.data.diaries
-      postedListLength.value = res.data.totalCount
+      // 如果data.postedList 与postedListLength.value不为空，就直接赋值，否则先清空再赋值
+      if (data.postedList.length != 0 && postedListLength.value != 0) {
+        data.postedList = res.data.diaries
+        postedListLength.value = res.data.totalCount
+      } else {
+        data.postedList = []
+        data.postedList = res.data.diaries
+        postedListLength.value = res.data.totalCount
+      }
     }
   })
 }
