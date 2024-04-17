@@ -31,7 +31,10 @@ interface Data {
       ownerId: number
       ownerAvatar: string
     }
-    filesList: []
+    filesList: {
+      OriginalName: string
+      signedUrl: string
+    }[]
     comments: {
       commentator: {
         user: string
@@ -64,7 +67,10 @@ interface editMailContent {
   id: number
   create_time: string
   author: string
-  filesList: []
+  filesList: {
+    OriginalName: string
+    signedUrl: string
+  }[]
 }
 
 const data = reactive<Data>({
@@ -194,7 +200,8 @@ const activateEditMail = (conten: any) => {
   if (conten.filesList) {
     editMailContent.filesList = conten.filesList.map((item: any) => {
       return {
-        url: item
+        url: item.signedUrl,
+        name: item.OriginalName
       }
     })
   }
@@ -371,6 +378,12 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
           <template #overlay>
             <a-menu>
               <a-menu-item>
+                <div @click="activateEditMail(item)">
+                  <EditOutlined style="font-size: 18px" />
+                  编辑日记
+                </div>
+              </a-menu-item>
+              <a-menu-item>
                 <a-popconfirm
                   title="确定删除吗？"
                   placement="bottomLeft"
@@ -383,12 +396,6 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
                   <DeleteOutlined style="font-size: 18px" />
                   删除日记
                 </a-popconfirm>
-              </a-menu-item>
-              <a-menu-item>
-                <div @click="activateEditMail(item)">
-                  <EditOutlined style="font-size: 18px" />
-                  编辑日记
-                </div>
               </a-menu-item>
             </a-menu>
           </template>
@@ -419,7 +426,7 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
       <a-row class="photo_wall">
         <a-col :key="key" v-for="(file, key) in item.filesList">
           <a-image
-            :src="file"
+            :src="file.signedUrl"
             :height="100"
             :width="100"
             loading="lazy"
