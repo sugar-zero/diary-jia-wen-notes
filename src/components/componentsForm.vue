@@ -127,6 +127,7 @@
 <script lang="ts" setup>
 import { getCurrentInstance, type ComponentInternalInstance, ref } from "vue"
 import type { UploadChangeParam } from "ant-design-vue"
+import { message } from "ant-design-vue"
 const { formData, formLabelData, formConfig } = defineProps([
   "formData",
   "formLabelData",
@@ -142,11 +143,17 @@ const onFinish = (values: any) => {
 const handleChange = (info: UploadChangeParam) => {
   if (info.file.status === "done") {
     internalFormData.value.avatar = info.file.response.data.data
+  } else if (info.file.status === "error") {
+    console.log(info.file)
+    message.error(`上传失败,${info.file.response.message} `)
   }
 }
 const handleChangeUserBg = (info: UploadChangeParam) => {
   if (info.file.status === "done") {
     internalFormData.value.userBg = info.file.response.data.data
+  } else if (info.file.status === "error") {
+    console.log(info.file)
+    message.error(`上传失败,${info.file.response.message} `)
   }
 }
 // 上传附带的token
