@@ -1,52 +1,76 @@
-# diary use node v18.17.1
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="./public/icon.jpg" width="200" style="border-radius:20px;" alt="Nest Logo" /></a>
+</p>
 
-This template should help get you started developing with Vue 3 in Vite.
+## 项目环境与许可
 
-## Recommended IDE Setup
+<img src="https://img.shields.io/badge/Node-18.7.1-blue" alt="Node Version">
+<img src="https://img.shields.io/badge/npm-9.6.7-skyblue" alt="NPM Version">
+<img src="https://img.shields.io/badge/license-GPT--2.0-green" alt="License">
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+## 简介
 
-## Type Support for `.vue` Imports in TS
+项目的灵感来自memos，简化了一些功能保留基本的日记记录功能
+项目采用的前后端分离架构，前端使用vue3+vite+pinia+antdv，后端使用nestjs+typeorm+mysql
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+<a href="https://gitee.com/SugarZero/diary-jia-wen-notes-service" target="_blank">
+    <img src="https://img.shields.io/badge/后端-Gitee-C71D23" alt="Gitee">
+</a>
+<a href="https://github.com/sugar-zero/diary-jia-wen-notes-service" target="_blank">
+    <img src="https://img.shields.io/badge/后端-Github-181717" alt="Github">
+</a>
+<a href="https://amedev.amesucre.com/diary/diary-serivce" target="_blank">
+    <img src="https://img.shields.io/badge/后端-AmeDev (Main)-52A1F8" alt="AmeDev">
+</a>
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+带有配套的后台管理系统
 
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+<a href="https://amedev.amesucre.com/diary-op/~builds?query=successful+and+~release~" target="_blank">
+    <img src="https://img.shields.io/badge/管理端-AmeDev (Main)-52A1F8" alt="AmeDev">
+</a>
 
-## Customize configuration
+### 实现的功能
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+- [x] 记录、删除日记（带图）
+- [x] 点赞、评论
+- [x] 修改密码（忘记密码）
+- [x] 分页
+- [x] ios伪App（添加到主屏幕）
+- [x] 推送订阅（已测试web,mac,ios）[具体说明与效果图查看Release1.4.0更新](https://gitee.com/SugarZero/diary-jia-wen-notes/releases/tag/v1.4.0)
 
-## Project Setup
+### 即将到来的更新
 
-```sh
-npm install
+- [ ] 没有了大概
+
+## 安装
+
+```bash
+$ npm install -g pnpm #if you don't have pnpm
+$ pnpm install
 ```
 
-### Compile and Hot-Reload for Development
+## 运行
 
-```sh
-npm run dev
+```bash
+$ pnpm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+## 构建
 
-```sh
-npm run build
+```bash
+$ pnpm run build
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+## 开箱即用的包
 
-```sh
-npm run test:unit
-```
+<a href="https://amedev.amesucre.com/diary/~builds?query=successful+and+~release~" target="_blank">
+    <img src="https://img.shields.io/badge/dist(With Env)-AmeDev-52A1F8" alt="Distribution on AmeDev">
+</a>
 
-### Lint with [ESLint](https://eslint.org/)
+## 预览图
 
-```sh
-npm run lint
-```
+<img src="./public/195021.jpeg" alt="登录界面" width="100%">
+<img src="./public/20231.jpeg" alt="主界面" width="100%">
+<img src="./public/19589.jpeg" alt="手机端主界面" width="30%">
+<img src="./public/20043.jpeg" alt="手机端界面" width="30%">
+<img src="./public/20112.jpeg" alt="手机端界面" width="30%">
