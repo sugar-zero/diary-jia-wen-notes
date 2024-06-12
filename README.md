@@ -6,7 +6,7 @@
 
 <img src="https://img.shields.io/badge/Node-18.7.1-blue" alt="Node Version">
 <img src="https://img.shields.io/badge/npm-9.6.7-skyblue" alt="NPM Version">
-<img src="https://img.shields.io/badge/license-GPT--2.0-green" alt="License">
+<img src="https://img.shields.io/badge/license-Apache--2.0-green" alt="License">
 
 ## 简介
 
