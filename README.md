@@ -64,7 +64,7 @@ $ pnpm run build
 ## 开箱即用的包
 
 <a href="https://amedev.amesucre.com/diary/~builds?query=successful+and+~release~" target="_blank">
-    <img src="https://img.shields.io/badge/dist(With Env)-AmeDev-52A1F8" alt="Distribution on AmeDev">
+    <img src="https://img.shields.io/badge/dist-AmeDev-52A1F8" alt="Distribution on AmeDev">
 </a>
 
 ## 预览图
