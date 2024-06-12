@@ -25,6 +25,16 @@
 
 带有配套的后台管理系统
 
+> 由于配套的后台管理系统在他人的商用框架基础上进行修改，遵循原作者的要求，不予开源；仅提供构建后程序包
+>
+> **后台管理系统承诺**
+>
+> - [x] 不包含非法内容、木马程序等不合规内容与代码
+> - [x] 不传输或存储使用者任何数据至第三方
+> - [x] 一切数据处理仅在使用者服务器进行
+>
+> 如不放心可根据后端的admin接口自行编写后台管理系统
+
 <a href="https://amedev.amesucre.com/diary-op/~builds?query=successful+and+~release~" target="_blank">
     <img src="https://img.shields.io/badge/管理端-AmeDev (Main)-52A1F8" alt="AmeDev">
 </a>
