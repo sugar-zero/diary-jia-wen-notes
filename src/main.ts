@@ -14,7 +14,7 @@ import router from "./router"
 //路由拦截
 router.beforeEach((to, from, next) => {
   let token = localStorage.getItem("token")
-  if (!token && to.name !== "login" && to.name !== "register") {
+  if (!token && to.name !== "login" && to.name !== "register" && to.name !== "forgotPassword") {
     router.push({ name: "login" })
   } else if ((to.name == "login" || to.name == "register") && token) {
     router.push({ name: "home" })
