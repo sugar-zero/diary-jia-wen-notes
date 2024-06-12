@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, h, reactive, getCurrentInstance } from "vue"
+import { ref, h, reactive, getCurrentInstance, onMounted, watch, onUnmounted } from "vue"
 import {
   SendOutlined,
   EditOutlined,
@@ -11,7 +11,7 @@ import { type UploadProps, type UploadChangeParam } from "ant-design-vue"
 import error_image from "@/assets/404.jpg"
 //引入store
 import { userStore } from "@/stores/main"
-import type { ComponentInternalInstance } from "vue"
+import type { ComponentInternalInstance, Ref } from "vue"
 const { userid } = userStore()
 const { proxy } = getCurrentInstance() as ComponentInternalInstance
 
@@ -59,6 +59,7 @@ interface Data {
     }
     commentShow: boolean
     placeholder: string
+    skeleton: boolean
   }[]
 }
 //编辑日记接口
@@ -425,14 +426,7 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
       <!-- <a-image-preview-group> -->
       <a-row class="photo_wall">
         <a-col :key="key" v-for="(file, key) in item.filesList">
-          <a-image
-            :src="file.signedUrl"
-            :height="100"
-            :width="100"
-            loading="lazy"
-            :error="error_image"
-            decoding="async"
-          />
+          <a-image :src="file.signedUrl" :height="100" :width="100" :error="error_image" />
         </a-col>
       </a-row>
       <!-- </a-image-preview-group> -->
