@@ -57,6 +57,7 @@ const updateVersion = () => {
     </template>
   </a-result>
   <RouterView v-else />
+  <a-back-top />
 </template>
 
 <style scoped></style>

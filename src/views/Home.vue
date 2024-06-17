@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, h, reactive, getCurrentInstance } from "vue"
+import { ref, h, reactive, getCurrentInstance, onMounted, watch, onUnmounted } from "vue"
 import {
   SendOutlined,
   EditOutlined,
@@ -11,10 +11,13 @@ import { type UploadProps, type UploadChangeParam } from "ant-design-vue"
 import error_image from "@/assets/404.jpg"
 //引入store
 import { userStore } from "@/stores/main"
-import type { ComponentInternalInstance } from "vue"
+import type { ComponentInternalInstance, Ref } from "vue"
 const { userid } = userStore()
 const { proxy } = getCurrentInstance() as ComponentInternalInstance
 
+const pageSize = ref(10)
+const current = ref(1)
+const postedListLength = ref(100)
 interface Data {
   content: String
   contentFileList: {}[]
@@ -28,7 +31,10 @@ interface Data {
       ownerId: number
       ownerAvatar: string
     }
-    filesList: []
+    filesList: {
+      OriginalName: string
+      signedUrl: string
+    }[]
     comments: {
       commentator: {
         user: string
@@ -53,6 +59,7 @@ interface Data {
     }
     commentShow: boolean
     placeholder: string
+    skeleton: boolean
   }[]
 }
 //编辑日记接口
@@ -61,7 +68,10 @@ interface editMailContent {
   id: number
   create_time: string
   author: string
-  filesList: []
+  filesList: {
+    OriginalName: string
+    signedUrl: string
+  }[]
 }
 
 const data = reactive<Data>({
@@ -87,8 +97,8 @@ const postedMail = () => {
         data.content = ""
         data.contentFileList = []
         fileList.value = []
-        data.postedList = res.data.data
         postedMailLoading.value = false
+        getMail()
       } else {
         proxy?.$message.error(res.message)
         postedMailLoading.value = false
@@ -98,9 +108,17 @@ const postedMail = () => {
 
 //获取全部日记列表
 const getMail = () => {
-  proxy?.$get("/diary/record").then((res: any) => {
+  proxy?.$get(`/diary/record?page=${current.value}&size=${pageSize.value}`).then((res: any) => {
     if (res.code == 200) {
-      data.postedList = res.data
+      // 如果data.postedList 与postedListLength.value不为空，就直接赋值，否则先清空再赋值
+      if (data.postedList.length != 0 && postedListLength.value != 0) {
+        data.postedList = res.data.diaries
+        postedListLength.value = res.data.totalCount
+      } else {
+        data.postedList = []
+        data.postedList = res.data.diaries
+        postedListLength.value = res.data.totalCount
+      }
     }
   })
 }
@@ -183,7 +201,8 @@ const activateEditMail = (conten: any) => {
   if (conten.filesList) {
     editMailContent.filesList = conten.filesList.map((item: any) => {
       return {
-        url: item
+        url: item.signedUrl,
+        name: item.OriginalName
       }
     })
   }
@@ -360,6 +379,12 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
           <template #overlay>
             <a-menu>
               <a-menu-item>
+                <div @click="activateEditMail(item)">
+                  <EditOutlined style="font-size: 18px" />
+                  编辑日记
+                </div>
+              </a-menu-item>
+              <a-menu-item>
                 <a-popconfirm
                   title="确定删除吗？"
                   placement="bottomLeft"
@@ -372,12 +397,6 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
                   <DeleteOutlined style="font-size: 18px" />
                   删除日记
                 </a-popconfirm>
-              </a-menu-item>
-              <a-menu-item>
-                <div @click="activateEditMail(item)">
-                  <EditOutlined style="font-size: 18px" />
-                  编辑日记
-                </div>
               </a-menu-item>
             </a-menu>
           </template>
@@ -399,11 +418,15 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
       </div>
     </div>
     <div class="centralArea">
-      <pre v-html="item.content" style="white-space: pre-wrap; word-wrap: break-word"></pre>
+      <pre
+        v-if="item.content"
+        v-html="item.content"
+        style="white-space: pre-wrap; word-wrap: break-word; margin-bottom: 0.5em"
+      ></pre>
       <!-- <a-image-preview-group> -->
       <a-row class="photo_wall">
         <a-col :key="key" v-for="(file, key) in item.filesList">
-          <a-image :src="file" :height="100" :width="100" loading="lazy" :error="error_image" />
+          <a-image :src="file.signedUrl" :height="100" :width="100" :error="error_image" />
         </a-col>
       </a-row>
       <!-- </a-image-preview-group> -->
@@ -468,6 +491,16 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
       </div>
     </div>
   </a-card>
+  <!-- 分页组件 -->
+  <a-pagination
+    v-model:current="current"
+    v-model:pageSize="pageSize"
+    :pageSizeOptions="[10, 20, 30, 50, 100]"
+    show-size-changer
+    :total="postedListLength"
+    @change="getMail"
+    :showTotal="(total: string, range: string) => `${range[0]}-${range[1]} 条，共 ${total} 条`"
+  />
   <!-- 编辑日记 -->
   <a-modal
     v-model:open="editMailModalOpen"
@@ -517,10 +550,10 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
 }
 .upperArea {
   color: rgba(0, 0, 0, 0.5);
-  margin-bottom: 1em;
+  margin-bottom: 0.5em;
 }
 .centralArea {
-  margin-bottom: 1em;
+  margin-bottom: 0.5em;
 }
 .lowerArea {
   font-size: 12px;

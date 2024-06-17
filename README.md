@@ -1,52 +1,87 @@
-# diary use node v18.17.1
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="./public/icon.jpg" width="200" style="border-radius:20px;" alt="Nest Logo" /></a>
+</p>
 
-This template should help get you started developing with Vue 3 in Vite.
+## 项目环境与许可
 
-## Recommended IDE Setup
+<img src="https://img.shields.io/badge/Node-18.7.1-blue" alt="Node Version">
+<img src="https://img.shields.io/badge/npm-9.6.7-skyblue" alt="NPM Version">
+<img src="https://img.shields.io/badge/license-Apache--2.0-green" alt="License">
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+体验地址：<a href="https://diary-dev.amesucre.com" target="_blank">
+<img src="https://img.shields.io/badge/体验地址-diary-aqua" alt="Gitee">
+</a>
+|账号|密码|
+|:---:|:---:|
+|test|test123..|
 
-## Type Support for `.vue` Imports in TS
+## 简介
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+项目的灵感来自memos，简化了一些功能保留基本的日记记录功能
+项目采用的前后端分离架构，前端使用vue3+vite+pinia+antdv，后端使用nestjs+typeorm+mysql
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+<a href="https://gitee.com/SugarZero/diary-jia-wen-notes-service" target="_blank">
+    <img src="https://img.shields.io/badge/后端-Gitee-C71D23" alt="Gitee">
+</a>
+<a href="https://github.com/sugar-zero/diary-jia-wen-notes-service" target="_blank">
+    <img src="https://img.shields.io/badge/后端-Github-181717" alt="Github">
+</a>
+<a href="https://amedev.amesucre.com/diary/diary-serivce" target="_blank">
+    <img src="https://img.shields.io/badge/后端-AmeDev (Main)-52A1F8" alt="AmeDev">
+</a>
 
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+带有配套的后台管理系统
 
-## Customize configuration
+> 由于配套的后台管理系统在他人的商用框架基础上进行修改，遵循原作者的要求，不予开源；仅提供构建后程序包
+>
+> **后台管理系统承诺**
+>
+> - [x] 不包含非法内容、木马程序等不合规内容与代码
+> - [x] 不传输或存储使用者任何数据至第三方
+> - [x] 一切数据处理仅在使用者服务器进行
+>
+> 如不放心可根据后端的admin接口自行编写后台管理系统
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+<a href="https://amedev.amesucre.com/diary-op/~builds?query=successful+and+~release~" target="_blank">
+    <img src="https://img.shields.io/badge/管理端-AmeDev (Main)-52A1F8" alt="AmeDev">
+</a>
 
-## Project Setup
+### 实现的功能
 
-```sh
-npm install
+- [x] 记录、删除日记（带图）
+- [x] 点赞、评论
+- [x] 修改密码（忘记密码）
+- [x] 分页
+- [x] ios伪App（添加到主屏幕）
+- [x] 推送订阅（已测试web,mac,ios）[具体说明与效果图查看Release1.4.0更新](https://gitee.com/SugarZero/diary-jia-wen-notes/releases/tag/v1.4.0)
+
+### 即将到来的更新
+
+- [ ] 编辑器（Markdown编辑器等）
+
+## 安装
+
+```bash
+$ npm install -g pnpm #if you don't have pnpm
+$ pnpm install
 ```
 
-### Compile and Hot-Reload for Development
+## 运行
 
-```sh
-npm run dev
+```bash
+$ pnpm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+## 构建
 
-```sh
-npm run build
+```bash
+$ pnpm run build
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+## 预览图
 
-```sh
-npm run test:unit
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+<img src="./public/195021.jpeg" alt="登录界面" width="100%">
+<img src="./public/20231.jpeg" alt="主界面" width="100%">
+<img src="./public/19589.jpeg" alt="手机端主界面" width="30%">
+<img src="./public/20043.jpeg" alt="手机端界面" width="30%">
+<img src="./public/20112.jpeg" alt="手机端界面" width="30%">
