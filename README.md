@@ -8,6 +8,13 @@
 <img src="https://img.shields.io/badge/npm-9.6.7-skyblue" alt="NPM Version">
 <img src="https://img.shields.io/badge/license-Apache--2.0-green" alt="License">
 
+体验地址：<a href="https://diary-dev.amesucre.com" target="_blank">
+<img src="https://img.shields.io/badge/体验地址-diary-aqua" alt="Gitee">
+</a>
+|账号|密码|
+|:---:|:---:|
+|test|test123..|
+
 ## 简介
 
 项目的灵感来自memos，简化了一些功能保留基本的日记记录功能
@@ -50,7 +57,7 @@
 
 ### 即将到来的更新
 
-- [ ] 没有了大概
+- [ ] 编辑器（Markdown编辑器等）
 
 ## 安装
 
