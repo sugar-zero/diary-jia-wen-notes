@@ -1,0 +1,50 @@
+version: 33
+jobs:
+- name: develop build
+  steps:
+  - !CheckoutStep
+    name: checkout code
+    cloneCredential: !DefaultCredential {}
+    withLfs: false
+    withSubmodules: false
+    condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
+  - !GenerateChecksumStep
+    name: generate package checksum
+    files: package-lock.json yarn.lock
+    targetFile: checksum
+    condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
+  - !SetupCacheStep
+    name: set up npm cache
+    key: node_modules_@file:checksum@
+    loadKeys:
+    - node_modules
+    paths:
+    - node_modules
+    uploadStrategy: UPLOAD_IF_NOT_HIT
+    condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
+  - !SetBuildVersionStep
+    name: set build version
+    buildVersion: '@script:builtin:node:determine-project-version@'
+    condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
+  - !CommandStep
+    name: build
+    runInContainer: true
+    image: node:18.17.1
+    interpreter: !DefaultInterpreter
+      commands: |
+        npm install
+        npm run build
+        tar cf dev-@build_number@-@script:builtin:node:determine-project-version@.tar.gz dist/
+    useTTY: true
+    condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
+  - !PublishArtifactStep
+    name: publish
+    artifacts: dev\-@build_number@\-@script:builtin:node:determine-project-version@.tar.gz
+    condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
+  triggers:
+  - !TagCreateTrigger
+    branches: develop
+  retryCondition: never
+  maxRetries: 3
+  retryDelay: 30
+  timeout: 3600
