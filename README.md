@@ -134,11 +134,11 @@ $ pnpm run build
 
 ## 预览图
 
-<img src="./public/195021.jpeg" alt="登录界面" width="100%">
-<img src="./public/20231.jpeg" alt="主界面" width="100%">
-<img src="./public/19589.jpeg" alt="手机端主界面" width="30%">
-<img src="./public/20043.jpeg" alt="手机端界面" width="30%">
-<img src="./public/20112.jpeg" alt="手机端界面" width="30%">
+<img src="./preview/195021.jpeg" alt="登录界面" width="100%">
+<img src="./preview/20231.jpeg" alt="主界面" width="100%">
+<img src="./preview/19589.jpeg" alt="手机端主界面" width="30%">
+<img src="./preview/20043.jpeg" alt="手机端界面" width="30%">
+<img src="./preview/20112.jpeg" alt="手机端界面" width="30%">
 
 #### 管理平台预览
 
