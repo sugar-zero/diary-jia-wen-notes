@@ -2,8 +2,8 @@ import fs from 'fs';
 import dotenv from 'dotenv';
 
 // 获取当前环境，默认为开发环境
-const environment = process.env.VITE_NODE_ENV || 'production';
-const envFile = `.env.${environment}`;
+// const environment = process.env.VITE_NODE_ENV || 'production';
+const envFile = '.env.example';
 
 // 读取对应的 .env 文件
 dotenv.config({ path: envFile });
