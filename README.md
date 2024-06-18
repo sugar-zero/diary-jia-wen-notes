@@ -44,7 +44,8 @@
 
 <a href="https://amedev.amesucre.com/diary-op/~builds?query=successful+and+~release~" target="_blank">
     <img src="https://img.shields.io/badge/管理端-AmeDev (Main)-52A1F8" alt="AmeDev">
-</a>
+</a><br>
+已实现的功能请移步<a href="https://blog.amesucre.com/articles/140" target="_blank">博客</a>查看
 
 ### 实现的功能
 
