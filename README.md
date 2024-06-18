@@ -45,7 +45,56 @@
 <a href="https://amedev.amesucre.com/diary-op/~builds?query=successful+and+~release~" target="_blank">
     <img src="https://img.shields.io/badge/管理端-AmeDev (Main)-52A1F8" alt="AmeDev">
 </a><br>
-已实现的功能请移步<a href="https://blog.amesucre.com/articles/140" target="_blank">博客</a>查看
+
+### 实现的功能(仅电脑端样式适配)
+
+- 菜单管理
+  - [x] 编辑
+- 权限管理
+  - [x] 查找
+  - [x] 新增
+  - [x] 编辑
+  - [x] 删除
+  - [x] 硬删除
+  - [x] 回收站[仅限删除]
+- 角色管理
+  - [x] 查找
+  - [x] 新增
+  - [x] 编辑
+  - [x] 删除
+  - [x] 硬删除
+  - [x] 回收站[仅限删除]
+- 用户管理
+  - [x] 编辑
+  - [x] 角色分配
+  - [x] 封锁（管理平台拥有豁免权时会忽略该封锁）
+  - [x] 解除封锁
+- 推送订阅管理
+  - [ ] 取消用户订阅
+- 系统信息与缓存管理
+  - [ ] 编辑系统基本信息
+  - [ ] 立刻刷新系统基本信息缓存
+- 日记管理
+  - [ ] 发布日记（在管理端发布日记有待考虑）
+  - [ ] 查找
+  - [ ] 编辑
+  - [ ] 删除
+  - [ ] 硬删除
+  - [ ] 回收站[仅限删除]
+  - 评论与图片审查
+    - [ ] 屏蔽评论
+    - [ ] 编辑图片列表
+
+#### 系统基本信息
+
+| 键             | 说明                                                                                                                                                                       |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| allowResgister | 允许注册                                                                                                                                                                   |
+| filings        | 备案号                                                                                                                                                                     |
+| backgroundUrl  | 登录背景图                                                                                                                                                                 |
+| version        | 版本号                                                                                                                                                                     |
+| diffVersion    | 允许差异的版本（限制ios伪app与网页缓存的时限性，在允许的差异版本内不会要求强制拉取最新的内容可以关闭弹框，超过范围只能操作拉取更新做不了其他操作，一般自己二次开发会用到） |
+| maintenance    | 维护模式                                                                                                                                                                   |
 
 ### 实现的功能
 
@@ -59,6 +108,7 @@
 ### 即将到来的更新
 
 - [ ] 编辑器（Markdown编辑器等）
+- [ ] 可配置文件（移除实际运行所需配置项对env的依赖）
 
 ## 安装
 
@@ -89,3 +139,10 @@ $ pnpm run build
 <img src="./public/19589.jpeg" alt="手机端主界面" width="30%">
 <img src="./public/20043.jpeg" alt="手机端界面" width="30%">
 <img src="./public/20112.jpeg" alt="手机端界面" width="30%">
+
+#### 管理平台预览
+
+<img src="https://amesucre-aurora-original.oss-cn-shenzhen.aliyuncs.com/aurora/articles/5c33308b6a0d80cf3f332a58db1db565.jpeg" alt="菜单管理" width="100%">
+<img src="https://amesucre-aurora-original.oss-cn-shenzhen.aliyuncs.com/aurora/articles/9a8060fa99c59a484c211cf8712d9716.jpeg" alt="权限管理" width="100%">
+<img src="https://amesucre-aurora-original.oss-cn-shenzhen.aliyuncs.com/aurora/articles/f4c32befd635654ea5f9a7b01a5a17ba.jpeg" alt="角色管理" width="100%">
+<img src="https://amesucre-aurora-original.oss-cn-shenzhen.aliyuncs.com/aurora/articles/f33a4d8803e6b5750a70cb24e2d3e5bf.jpeg" alt="用户管理" width="100%">
