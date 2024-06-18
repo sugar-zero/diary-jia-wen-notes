@@ -70,6 +70,9 @@ $ pnpm install
 ## 运行
 
 ```bash
+# 请先配置.env.example文件，修改你的公钥
+# 可以在这里生成https://vapidkeys.com/ 或其他方法生成，后端还需要填写密钥
+# 请将.env.example文件重命名为.env.development或.env.production
 $ pnpm run dev
 ```
 
