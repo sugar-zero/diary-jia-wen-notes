@@ -9,6 +9,19 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="theme-color" content="#fff">
+    <script>
+      (function() {
+      var script = document.createElement('script');
+      script.src = '/app.config.js?timestamp=' + new Date().getTime();
+      script.onload = function() {
+        // Vue application script (ensure this runs after config is loaded)
+        var appScript = document.createElement('script');
+        appScript.src = '/app.config.js';
+        document.body.appendChild(appScript);
+      };
+      document.head.appendChild(script);
+    })();
+    </script>
     <title>佳雯的日记</title>
   </head>
   <body>

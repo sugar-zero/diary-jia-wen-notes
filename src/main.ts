@@ -56,7 +56,7 @@ if ("serviceWorker" in navigator) {
       scope: "/"
     })
     .then((registration) => {
-      console.log("service-worker注册成功", registration)
+      // console.log("service-worker注册成功", registration)
       // message.success("service-worker注册成功")
     })
     .catch((err) => {

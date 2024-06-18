@@ -32,3 +32,4 @@ coverage
 .env
 .env.*
 !.env.example
+app.config.js

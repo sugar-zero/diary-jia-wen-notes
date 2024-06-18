@@ -3,7 +3,7 @@ import { mergeConfig, defineConfig, configDefaults } from "vitest/config"
 import viteConfig from "./vite.config"
 
 export default mergeConfig(
-  viteConfig,
+  viteConfig as any,
   defineConfig({
     test: {
       environment: "jsdom",
@@ -16,6 +16,6 @@ export default mergeConfig(
           additionalData: `@import "@/assets/variables.less";`
         }
       }
-    },
+    }
   })
 )

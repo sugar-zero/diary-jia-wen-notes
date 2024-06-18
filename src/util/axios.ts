@@ -2,9 +2,10 @@ import axios from "axios"
 import type { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from "axios"
 import { message, Modal } from "ant-design-vue"
 import router from "../router"
+import config from "@/config/configLoader"
 
 // 引入API地址
-const apiUrl = import.meta.env.VITE_BASE_API
+const apiUrl = config.VITE_GLOBAL_BASE_API
 
 // 创建Axios实例
 const service: AxiosInstance = axios.create({
