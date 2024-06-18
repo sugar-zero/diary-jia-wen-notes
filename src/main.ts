@@ -63,4 +63,13 @@ if ("serviceWorker" in navigator) {
       console.log("service-worker注册失败", err)
     })
 }
+
+;(async function loadConfig() {
+  if (process.env.NODE_ENV === "production") {
+    const response = await fetch("/app.config.js")
+    const scriptText = await response.text()
+    eval(scriptText) // 执行 config.js 内容
+  }
+})
+
 app.use(router).use(createPinia()).mount("#app")
