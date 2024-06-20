@@ -12,6 +12,9 @@ import componentsForm from "./componentsForm.vue"
 import router from "../router"
 import { userStore } from "@/stores/main"
 import type { Rule } from "ant-design-vue/es/form"
+import { httpRequest } from "@/api/api"
+import { message } from "ant-design-vue"
+const http = new httpRequest()
 // @ts-ignore
 const { proxy } = getCurrentInstance()
 const version = import.meta.env.VITE_VERSION
@@ -21,7 +24,7 @@ const NotificationPermission = ref(false)
 const logout = () => {
   const useUserStore = userStore()
   useUserStore.logout()
-  proxy?.$message.success("已出退登录")
+  message.success("已出退登录")
   router.push({ name: "login" })
 }
 interface userInfo {
@@ -88,7 +91,7 @@ const userSecurity = ref<userSecurity>({
 })
 // let tryCount: number = 0
 const getUserInfo = () => {
-  proxy?.$get("/user/info").then((res: any) => {
+  http.get("/user/info").then((res: any) => {
     if (res.code == 200) {
       userInfo.nickname = res.data.data.nickname
       userInfo.username = res.data.data.username
@@ -105,9 +108,9 @@ const EditUserInfoModal = () => {
   showEditUserInfoModal.value = true
 }
 const updateUserInfo = (row: any) => {
-  proxy?.$put("/user/info", row).then((res: any) => {
+  http.put("/user/info", row).then((res: any) => {
     if (res.code == 200) {
-      proxy?.$message.success("修改成功")
+      message.success("修改成功")
       userInfo.nickname = res.data.data.nickname
       userInfo.username = res.data.data.username
       userInfo.signature = res.data.data.signature
@@ -177,12 +180,12 @@ const userSecurityRules: Record<string, Rule[]> = {
   ]
 }
 const updateUserSecurity = (value: userSecurity) => {
-  proxy?.$put("/user/security", userSecurity.value).then((res: any) => {
+  http.put("/user/security", userSecurity.value).then((res: any) => {
     if (res.code == 200) {
-      proxy?.$message.success(res.data.message)
+      message.success(res.data.message)
       logout()
     } else {
-      proxy?.$message.error(res.message)
+      message.error(res.message)
     }
   })
 }

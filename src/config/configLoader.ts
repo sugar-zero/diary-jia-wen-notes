@@ -3,6 +3,7 @@ interface Config {
   VITE_GLOBAL_APP_SERVER_PUBLIC_KEY: string
   VITE_GLOBAL_CryptoJS_KEY: string
   VITE_GLOBAL_CryptoJS_IV: string
+  VITE_GLOBAL_APP_NAME: string
 }
 let config = {} as Config
 
@@ -18,7 +19,8 @@ if (process.env.NODE_ENV === "production") {
     VITE_GLOBAL_BASE_API: import.meta.env.VITE_GLOBAL_BASE_API,
     VITE_GLOBAL_APP_SERVER_PUBLIC_KEY: import.meta.env.VITE_GLOBAL_APP_SERVER_PUBLIC_KEY,
     VITE_GLOBAL_CryptoJS_KEY: import.meta.env.VITE_GLOBAL_CryptoJS_KEY,
-    VITE_GLOBAL_CryptoJS_IV: import.meta.env.VITE_GLOBAL_CryptoJS_IV
+    VITE_GLOBAL_CryptoJS_IV: import.meta.env.VITE_GLOBAL_CryptoJS_IV,
+    VITE_GLOBAL_APP_NAME: import.meta.env.VITE_GLOBAL_APP_NAME
   } as Config
 }
 

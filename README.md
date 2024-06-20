@@ -12,7 +12,7 @@
 <img src="https://img.shields.io/badge/体验地址-diary-aqua" alt="Gitee">
 </a>
 |账号|密码|
-|:---:|:---:|
+|---|---|
 |test|test123..|
 
 ## 简介
@@ -104,11 +104,8 @@
 - [x] 分页
 - [x] ios伪App（添加到主屏幕）
 - [x] 推送订阅（已测试web,mac,ios）[具体说明与效果图查看Release1.4.0更新](https://gitee.com/SugarZero/diary-jia-wen-notes/releases/tag/v1.4.0)
-
-### 即将到来的更新
-
-- [ ] 编辑器（Markdown编辑器等）
-- [ ] 可配置文件（移除实际运行所需配置项对env的依赖）
+- [x] 日记发布的Markdown编辑器 <span style="color:red;">新功能</span>
+- [x] 可配置文件（移除实际运行所需配置项对env的依赖，更改配置后开箱即用）<span style="color:red;">新功能</span>
 
 ## 安装
 

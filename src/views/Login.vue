@@ -6,6 +6,9 @@ import { message, Modal } from "ant-design-vue"
 import { MailOutlined } from "@ant-design/icons-vue"
 import { h, type ComponentInternalInstance } from "vue"
 import { type Rule } from "ant-design-vue/es/form"
+import { httpRequest } from "@/api/api"
+import { aes_encrypt } from "@/util/aes"
+const http = new httpRequest()
 
 const allowregister = JSON.parse(localStorage.getItem("systemConfig") as string).allowResgister
 const backgroundUrl = JSON.parse(localStorage.getItem("systemConfig") as string).backgroundUrl
@@ -19,8 +22,8 @@ const disabledLogin = ref(false)
 const login = () => {
   message.loading({ content: "登录中...", key: "login" })
   disabledLogin.value = true
-  proxy
-    ?.$post("/user/login", { secret: proxy?.$aes_encrypt(JSON.stringify(formData.value)) })
+  http
+    .post("/user/login", { secret: aes_encrypt(JSON.stringify(formData.value)) })
     .then((res: any) => {
       if (res.code === 200) {
         disabledLogin.value = false
@@ -69,7 +72,7 @@ const forgotPasswordRules: Record<string, Rule[]> = {
 
 // 发送找回密码邮件
 const sendEmail = () => {
-  proxy?.$post("/user/forgotPassword", { email: emailInfo.value.email }).then((res: any) => {
+  http.post("/user/forgotPassword", { email: emailInfo.value.email }).then((res: any) => {
     res.code === 200 ? message.success(res.data.message) : message.error(res.message)
   })
 }

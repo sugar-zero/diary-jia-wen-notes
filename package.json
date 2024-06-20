@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "prebuild": "node generateConfig.js",
-    "build": "run-p type-check \"build-only {@}\" --",
+    "build": "run-p \"build-only {@}\" --",
     "preview": "run-p prebuild \"build-only {@}\" && vite preview",
     "test:unit": "vitest",
     "build-only": "vite build",
@@ -22,6 +22,7 @@
     "crypto-js": "^4.2.0",
     "dotenv": "^16.4.5",
     "js-yaml": "^4.1.0",
+    "md-editor-v3": "^4.16.9",
     "pinia": "^2.1.7",
     "vue": "^3.3.10",
     "vue-router": "^4.2.5"

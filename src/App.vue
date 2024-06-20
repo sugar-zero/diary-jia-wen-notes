@@ -3,6 +3,8 @@ import { getCurrentInstance, onMounted, ref } from "vue"
 import { RouterView } from "vue-router"
 import { SmileTwoTone } from "@ant-design/icons-vue"
 import type { ComponentInternalInstance } from "vue"
+import { httpRequest } from "@/api/api"
+const http = new httpRequest()
 const { proxy } = getCurrentInstance() as ComponentInternalInstance
 const getClientVersionTag = Number(import.meta.env.VITE_VERSION_TAG)
 const getClientVersion = import.meta.env.VITE_VERSION
@@ -13,7 +15,7 @@ const switchlocal = ref(false)
 const isMaintenance = ref(false)
 
 const getSystemConfig = () => {
-  proxy?.$get("/system/config").then((res: any) => {
+  http.get("/system/config").then((res: any) => {
     localStorage.setItem("systemConfig", JSON.stringify(res.data))
     if (getClientVersionTag < JSON.parse(localStorage.getItem("systemConfig") as string).version) {
       newClientVersionString.value = JSON.parse(

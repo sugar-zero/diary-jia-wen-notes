@@ -4,6 +4,9 @@ import { ref, getCurrentInstance } from "vue"
 const { proxy } = getCurrentInstance()
 import { type Rule } from "ant-design-vue/es/form"
 import { message } from "ant-design-vue"
+import { httpRequest } from "@/api/api"
+import { aes_encrypt } from "@/util/aes"
+const http = new httpRequest()
 
 const registerformData = ref({
   username: "",
@@ -15,8 +18,8 @@ const registerformData = ref({
 
 const register = () => {
   message.loading({ content: "注册中...", key: "register" })
-  proxy
-    ?.$post("/user/reg", { secret: proxy?.$aes_encrypt(JSON.stringify(registerformData.value)) })
+  http
+    .post("/user/reg", { secret: aes_encrypt(JSON.stringify(registerformData.value)) })
     .then((res: any) => {
       if (res.code === 200) {
         message.success({ content: res.data.message, key: "register" })

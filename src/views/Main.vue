@@ -3,15 +3,18 @@ import { RouterView } from "vue-router"
 import { ref, type CSSProperties, onMounted, getCurrentInstance } from "vue"
 import userInfoCard from "@/components/userInfoCard.vue"
 import Home from "@/views/Home.vue"
-import type { ComponentInternalInstance } from "vue"
 const filings = JSON.parse(localStorage.getItem("systemConfig") as string).filings
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
 const screenWidth = ref(0)
 const drawer = ref(null)
 const footer = ref()
 const header = ref()
 const minContentHeight = ref(0)
 const siderDrawerOpened = ref(false)
+import { httpRequest } from "@/api/api"
+const http = new httpRequest()
+import { message } from "ant-design-vue"
+import config from "@/config/configLoader"
+
 const siderStyle: CSSProperties = {
   minWidth: "300px",
   color: "#fff",
@@ -73,21 +76,21 @@ const siderDrawerSwitch = () => {
 const home: any = ref(null)
 const refreshMailList = () => {
   home.value.getMail()
-  proxy?.$message.success("刷新成功")
+  message.success("刷新成功")
 }
 // 询问用户是否开启Notification推送权限
 const askNotificationPermission = () => {
   if (!("Notification" in window)) {
-    proxy?.$message.error("您的浏览器不支持通知。")
+    message.error("您的浏览器不支持通知。")
   }
   Notification.requestPermission((res) => {
     if (res === "granted") {
       console.log("通知权限已授权")
-      proxy?.$message.success("通知权限已授权")
+      message.success("通知权限已授权")
       subscribeToPushService()
     } else {
       console.log("通知权限被拒绝")
-      proxy?.$message.error("通知权限已拒绝，请打开通知权限")
+      message.error("通知权限已拒绝，请打开通知权限")
     }
   })
 }
@@ -107,7 +110,7 @@ const subscribeToPushService = () => {
       .then((subscription) => {
         // console.log("推送订阅成功：", subscription)
         // 发送订阅到应用服务器
-        proxy?.$post("/subscribe", subscription.toJSON())
+        http.post("/subscribe", subscription.toJSON())
       })
       .catch((e) => {
         if (Notification.permission === "denied") {
@@ -157,7 +160,7 @@ const subscribeToPushService = () => {
   </a-layout>
   <a-layout-footer :style="footerStyle" ref="footer">
     <!-- <div v-if="MODE === 'development'">当前开发模式</div> -->
-    佳雯的日记 ©2024
+    {{ config.VITE_GLOBAL_APP_NAME }} ©2024
     <a href="https://beian.miit.gov.cn/" target="_blank">{{ filings }}</a>
   </a-layout-footer>
 </template>

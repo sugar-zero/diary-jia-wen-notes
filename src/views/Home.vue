@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, h, reactive, getCurrentInstance, onMounted, watch, onUnmounted } from "vue"
+import { ref, h, reactive, getCurrentInstance, onMounted } from "vue"
 import {
   SendOutlined,
   EditOutlined,
@@ -14,6 +14,11 @@ import { userStore } from "@/stores/main"
 import type { ComponentInternalInstance, Ref } from "vue"
 const { userid } = userStore()
 const { proxy } = getCurrentInstance() as ComponentInternalInstance
+import { message } from "ant-design-vue"
+import { MdEditor, MdPreview } from "md-editor-v3"
+import { httpRequest } from "@/api/api"
+const http = new httpRequest()
+import "md-editor-v3/lib/style.css"
 
 const pageSize = ref(10)
 const current = ref(1)
@@ -86,21 +91,21 @@ let postedMailLoading = ref(false)
 const postedMail = () => {
   postedMailLoading.value = true
 
-  proxy
-    ?.$post("/diary/record", {
+  http
+    .post("/diary/record", {
       content: data.content,
       files: data.contentFileList
     })
     .then((res: any) => {
       if (res.code == 200) {
-        proxy?.$message.success(res.data.message)
+        message.success(res.data.message)
         data.content = ""
         data.contentFileList = []
         fileList.value = []
         postedMailLoading.value = false
         getMail()
       } else {
-        proxy?.$message.error(res.message)
+        message.error(res.message)
         postedMailLoading.value = false
       }
     })
@@ -108,7 +113,7 @@ const postedMail = () => {
 
 //获取全部日记列表
 const getMail = () => {
-  proxy?.$get(`/diary/record?page=${current.value}&size=${pageSize.value}`).then((res: any) => {
+  http.get(`/diary/record?page=${current.value}&size=${pageSize.value}`).then((res: any) => {
     if (res.code == 200) {
       // 如果data.postedList 与postedListLength.value不为空，就直接赋值，否则先清空再赋值
       if (data.postedList.length != 0 && postedListLength.value != 0) {
@@ -166,7 +171,7 @@ const handleChange = (info: UploadChangeParam) => {
         localStorage.removeItem("token")
         proxy?.$router.push("/login")
       }
-      proxy?.$message.error(info.file.response.message)
+      message.error(info.file.response.message)
     }
   }
 }
@@ -217,30 +222,30 @@ const initEditModal = () => {
 }
 //删除日记
 const deleteMail = (id: number) => {
-  proxy?.$del(`/diary/record/${id}`).then((res: any) => {
+  http.del(`/diary/record/${id}`).then((res: any) => {
     if (res.code == 200) {
-      proxy?.$message.success(res.data.message)
+      message.success(res.data.message)
       getMail()
     } else {
-      proxy?.$message.error(res.message)
+      message.error(res.message)
     }
   })
 }
 //更新日记
 const updateMail = () => {
-  proxy
-    ?.$patch("/diary/record", {
+  http
+    .patch("/diary/record", {
       content: editMailContent.content,
       id: editMailContent.id,
       files: editMailContent.filesList
     })
     .then((res: any) => {
       if (res.code == 200) {
-        proxy?.$message.success(res.data.message)
+        message.success(res.data.message)
         initEditModal()
         getMail()
       } else {
-        proxy?.$message.error(res.message)
+        message.error(res.message)
       }
     })
 }
@@ -258,93 +263,114 @@ const editComment = (action: string, item: any, reply?: any) => {
 }
 // 发布评论
 const postComment = (diaryId: number, userId: number, comment: object) => {
-  proxy?.$post("/diary/comment", { diaryId, userId, comment }).then((res: any) => {
+  http.post("/diary/comment", { diaryId, userId, comment }).then((res: any) => {
     if (res.code == 200) {
-      proxy?.$message.success(res.data.message)
+      message.success(res.data.message)
       getMail()
     } else {
-      proxy?.$message.error(res.data.join("、"))
+      message.error(res.data.join("、"))
     }
   })
 }
 //删除评论
 const deleteComment = (userId: number, commentId: number) => {
-  proxy?.$deldata("/diary/comment", { userId, commentId }).then((res: any) => {
+  http.deldata("/diary/comment", { userId, commentId }).then((res: any) => {
     if (res.code == 200) {
-      proxy?.$message.success(res.data.message)
+      message.success(res.data.message)
       getMail()
     } else {
-      proxy?.$message.error(res.message)
+      message.error(res.message)
     }
   })
 }
 //点赞
 const likeMail = (userId: number, diaryId: number) => {
-  proxy?.$post("/diary/like", { userId, diaryId }).then((res: any) => {
+  http.post("/diary/like", { userId, diaryId }).then((res: any) => {
     if (res.code == 200) {
-      proxy?.$message.success(res.data.message)
+      message.success(res.data.message)
       getMail()
     } else {
-      proxy?.$message.error(res.message)
+      message.error(res.message)
     }
   })
 }
 // 取消点赞
 const cancelLikeMail = (userId: number, diaryId: number) => {
-  proxy?.$deldata("/diary/like", { userId, diaryId }).then((res: any) => {
+  http.deldata("/diary/like", { userId, diaryId }).then((res: any) => {
     if (res.code == 200) {
-      proxy?.$message.success(res.data.message)
+      message.success(res.data.message)
       getMail()
     } else {
-      proxy?.$message.error(res.message)
+      message.error(res.message)
     }
   })
 }
+//计算视图宽度
+const screenWidth = ref(0)
+const getScreenWidth = () => {
+  screenWidth.value = window.innerWidth
+}
+getScreenWidth()
+onMounted(() => {
+  window.addEventListener("resize", () => {
+    getScreenWidth()
+  })
+})
 </script>
 
 <template>
-  <a-card :bordered="false" style="margin-bottom: 1rem" id="postedCard">
-    <a-textarea
-      v-model:value="data.content"
-      placeholder="记录点什么吧？写写今日发生的趣事"
-      auto-size
-      :bordered="false"
-    />
-    <a-divider />
-    <a-upload
-      name="diary"
-      action="api/v2/upload/diary-image"
-      :headers="uploadHeaders"
-      v-model:file-list="fileList"
-      list-type="picture-card"
-      @preview="handlePreview"
-      :multiple="true"
-      accept="image/*"
-      :max-count="9"
-      @change="handleChange"
-      @remove="removeImage"
-    >
-      <div v-if="fileList && fileList.length < 9">
-        <plus-outlined />
-        <div style="margin-top: 8px">上传图片</div>
-      </div>
-    </a-upload>
-    <a-modal :open="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
-      <img alt="example" style="width: 100%" :src="previewImage" />
-    </a-modal>
-    <a-button
-      :icon="h(data.content ? SendOutlined : EditOutlined)"
-      value="small"
-      style="float: right"
-      type="primary"
-      @click="postedMail"
-      :loading="postedMailLoading"
-      :disabled="(fileList && fileList.length > 0) || data.content ? false : true"
-      >{{
-        (fileList && fileList.length > 0) || data.content ? "记录下来" : "先写点什么吧"
-      }}</a-button
-    >
-  </a-card>
+  <a-collapse accordion :bordered="false" style="background: rgb(255, 255, 255)">
+    <a-collapse-panel header="要记录点什么吗？" :showArrow="false" style="margin-bottom: 1rem">
+      <span v-if="screenWidth < 1400">✨功能框可以左右滑动哦~</span>
+      <a-card :bordered="false" id="postedCard">
+        <!-- <a-textarea
+          v-model:value="data.content"
+          placeholder="记录点什么吧？写写今日发生的趣事"
+          auto-size
+          :bordered="false"
+        /> -->
+        <MdEditor
+          v-model="data.content"
+          noUploadImg
+          :toolbarsExclude="['image', 'github', 'save']"
+        />
+        <a-divider />
+        <a-upload
+          name="diary"
+          action="api/v2/upload/diary-image"
+          :headers="uploadHeaders"
+          v-model:file-list="fileList"
+          list-type="picture-card"
+          @preview="handlePreview"
+          :multiple="true"
+          accept="image/*"
+          :max-count="9"
+          @change="handleChange"
+          @remove="removeImage"
+        >
+          <div v-if="fileList && fileList.length <= 9">
+            <plus-outlined />
+            <div style="margin-top: 8px">上传图片</div>
+          </div>
+        </a-upload>
+        <a-modal :open="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
+          <img alt="example" style="width: 100%" :src="previewImage" />
+        </a-modal>
+        <a-button
+          :icon="h(data.content ? SendOutlined : EditOutlined)"
+          value="small"
+          style="float: right"
+          type="primary"
+          @click="postedMail"
+          :loading="postedMailLoading"
+          :disabled="(fileList && fileList.length > 0) || data.content ? false : true"
+          >{{
+            (fileList && fileList.length > 0) || data.content ? "记录下来" : "先写点什么吧"
+          }}</a-button
+        >
+      </a-card>
+    </a-collapse-panel>
+  </a-collapse>
   <a-card
     size="small"
     style="width: 100%; margin-bottom: 5px"
@@ -418,18 +444,19 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
       </div>
     </div>
     <div class="centralArea">
-      <pre
+      <!-- <pre
         v-if="item.content"
-        v-html="item.content"
+        v-html="marked(item.content)"
         style="white-space: pre-wrap; word-wrap: break-word; margin-bottom: 0.5em"
-      ></pre>
-      <!-- <a-image-preview-group> -->
-      <a-row class="photo_wall">
-        <a-col :key="key" v-for="(file, key) in item.filesList">
-          <a-image :src="file.signedUrl" :height="100" :width="100" :error="error_image" />
-        </a-col>
-      </a-row>
-      <!-- </a-image-preview-group> -->
+      ></pre> -->
+      <MdPreview :modelValue="item.content" />
+      <a-image-preview-group>
+        <a-row class="photo_wall">
+          <a-col :key="key" v-for="(file, key) in item.filesList">
+            <a-image :src="file.signedUrl" :height="100" :width="100" :error="error_image" />
+          </a-col>
+        </a-row>
+      </a-image-preview-group>
     </div>
     <div class="lowerArea">
       <div class="lowerArearight"></div>
@@ -510,11 +537,16 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
     @cancel="initEditModal"
     @ok="updateMail"
   >
-    <a-textarea
+    <!-- <a-textarea
       v-model:value="editMailContent.content"
       placeholder="日记是空内容哦~不写点什么吗？"
       auto-size
       :bordered="false"
+    /> -->
+    <MdEditor
+      v-model="editMailContent.content"
+      noUploadImg
+      :toolbarsExclude="['image', 'github', 'save']"
     />
     <a-divider />
     <a-upload
@@ -581,5 +613,10 @@ const cancelLikeMail = (userId: number, diaryId: number) => {
   grid-template-rows: repeat(auto-fit, 100px);
   grid-column-gap: 1%;
   grid-row-gap: 2%;
+}
+</style>
+<style langer="less">
+.md-editor-preview-wrapper {
+  padding: 0;
 }
 </style>

@@ -25,15 +25,18 @@
 import { ref, getCurrentInstance, type ComponentInternalInstance } from "vue"
 import type { Rule } from "ant-design-vue/es/form"
 const { proxy } = getCurrentInstance() as ComponentInternalInstance
+import { httpRequest } from "@/api/api"
+const http = new httpRequest()
+import { message } from "ant-design-vue"
 const token = proxy?.$route.params.token
 const findForgotPasswordUser = () => {
-  proxy?.$post("/user/fetchValidToken", { token }).then((res: any) => {
+  http.post("/user/fetchValidToken", { token }).then((res: any) => {
     if (res.code === 200) {
       forgotPasswordForm.value.userid = res.data.userid
       forgotPasswordForm.value.email = res.data.email
       forgotPasswordForm.value.username = res.data.username
     } else {
-      proxy?.$message.error(res.message)
+      message.error(res.message)
       proxy?.$router.push("/login")
     }
   })
@@ -74,13 +77,13 @@ const resetPasswordRules: Record<string, Rule[]> = {
   ]
 }
 const onSubmit = (resetPassword: forgotPasswordForm) => {
-  proxy?.$post("/user/resetPassword", { token, resetPassword }).then((res: any) => {
+  http.post("/user/resetPassword", { token, resetPassword }).then((res: any) => {
     if (res.code === 200) {
-      proxy?.$message.success(res.data.message)
-        proxy?.$router.push("/login")
+      message.success(res.data.message)
+      proxy?.$router.push("/login")
     } else {
-      proxy?.$message.error(res.message)
-        proxy?.$router.push("/login")
+      message.error(res.message)
+      proxy?.$router.push("/login")
     }
   })
 }
